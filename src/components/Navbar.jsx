@@ -33,6 +33,12 @@ const Navbar = () => {
         <li>
           <NavLink to="about">O nas</NavLink>
         </li>
+        <li>
+          <NavLink to="about">Logowanie</NavLink>
+        </li>
+        <li>
+          <NavLink to="about">Koszyk</NavLink>
+        </li>
       </ul>
     </nav>
   );
