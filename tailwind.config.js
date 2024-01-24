@@ -6,7 +6,18 @@ module.exports = {
   theme: {
     extend: {},
     colors: {
-      'main-color': '#FFE5CF'
+      'white': '#ffffff',
+      'blue': '#1fb6ff',
+      'purple': '#7e5bef',
+      'pink': '#ff49db',
+      'orange': '#ff7849',
+      'green': '#13ce66',
+      'yellow': '#ffc82c',
+      'gray-dark': '#273444',
+      'gray': '#8492a6',
+      'gray-light': '#d3dce6',
+      'main-color': '#FFE5CF',
+      'buttons-color': '#624E2D'
     },
   },
   plugins: [require("daisyui")],

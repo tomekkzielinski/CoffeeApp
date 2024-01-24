@@ -34,10 +34,10 @@ const Navbar = () => {
           <NavLink to="about">O nas</NavLink>
         </li>
         <li>
-          <NavLink to="about">Logowanie</NavLink>
+          <NavLink to="login">Logowanie</NavLink>
         </li>
         <li>
-          <NavLink to="about">Koszyk</NavLink>
+          <NavLink to="cart">Koszyk</NavLink>
         </li>
       </ul>
     </nav>
