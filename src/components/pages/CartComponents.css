@@ -1,0 +1,5 @@
+/* tailwind.config.js lub w pliku CSS */
+.checkbox:checked {
+    @apply bg-buttons-color;
+  }
+  

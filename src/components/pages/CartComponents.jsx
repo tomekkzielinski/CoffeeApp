@@ -1,4 +1,5 @@
 import React from "react";
+import "./CartComponents.css";
 
 const cartProducts = [
   {
@@ -21,7 +22,7 @@ const cartProducts = [
     name: "Produkt 3",
     price: 39.99,
     description: "Da się wypić",
-  },
+  }
 ];
 
 const CartComponents = ({ id, name, price, description, image }) => {
@@ -29,7 +30,10 @@ const CartComponents = ({ id, name, price, description, image }) => {
     <tr>
       <th>
         <label>
-          <input  type="checkbox" className="checkbox  border-4" />
+          <input
+            type="checkbox"
+            className="checkbox border-4 border-buttons-color focus:buttons-color"
+          />
         </label>
       </th>
       <td>
@@ -62,7 +66,7 @@ const CartList = () => {
           <tr>
             <th>
               <label>
-                <input type="checkbox" className="checkbox border-4" />
+                <input type="checkbox" className="checkbox border-4 border-buttons-color" />
               </label>
             </th>
             <th className="text-xl">Nazwa</th>
@@ -84,6 +88,11 @@ const CartList = () => {
           ))}
         </tbody>
       </table>
+      <div className="flex justify-center items-center mx-auto mt-20">
+        <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
+          Zamów i zapłać przy kasie
+        </button>
+      </div>
     </div>
   );
 };
