@@ -42,7 +42,7 @@ const products = [
 const Product = ({ name, price, imageUrl }) => {
 
     return (
-        <div className="grid grid-cols-3 gap-4 m-5">
+        <div className="  gap-4 m-5  flex flex-wrap">
             {products.map(product => (
                 <div key={product.id} className="card w-96 bg-base-100 shadow-xl">
                     <figure><img src={product.image} alt="Shoes" /></figure>

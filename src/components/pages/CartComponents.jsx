@@ -25,6 +25,7 @@ const cartProducts = [
   }
 ];
 
+
 const CartComponents = ({ id, name, price, description, image }) => {
   return (
     <tr>
@@ -71,7 +72,7 @@ const CartList = () => {
             </th>
             <th className="text-xl">Nazwa</th>
             <th className="text-xl">Cena</th>
-            <th className="text-xl">Ilość</th>
+            <th type="number" className="text-xl">Ilość</th>
             <th></th>
           </tr>
         </thead>

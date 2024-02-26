@@ -22,6 +22,9 @@ const Navbar = () => {
       </div>
       <ul className={menuOpen ? "open" : ""}>
         <li>
+          <NavLink to="add-product">Dodaj produkt</NavLink>
+        </li>
+        <li>
           <NavLink to="menu">Menu</NavLink>
         </li>
         <li>
