@@ -1,32 +1,27 @@
-import React from "react";
-import "./CartComponents.css";
+import React, { useState } from "react";
 
-const cartProducts = [
-  {
-    id: 1,
-    image: "../../espresso.jpg",
-    name: "Espresso",
-    price: 29.99,
-    description: "Kozacka kawka przygotowana z pasją",
-  },
-  {
-    id: 2,
-    image: "../../americano.jpg",
-    name: "Produkt 2",
-    price: 49.99,
-    description: "Trochę gorsza kawka ale też spoko",
-  },
-  {
-    id: 3,
-    image: "../../latte.jpg",
-    name: "Produkt 3",
-    price: 39.99,
-    description: "Da się wypić",
-  }
-];
+const CartComponents = ({
+  id,
+  name,
+  price,
+  description,
+  image,
+  quantity,
+  onQuantityChange,
+}) => {
+  const [inputQuantity, setInputQuantity] = useState(quantity);
 
+  const handleInputChange = (e) => {
+    const newQuantity = parseInt(e.target.value);
+    if (!isNaN(newQuantity) && newQuantity >= 0) {
+      setInputQuantity(newQuantity);
+    }
+  };
 
-const CartComponents = ({ id, name, price, description, image }) => {
+  const handleBlur = () => {
+    onQuantityChange(id, parseInt(inputQuantity));
+  };
+
   return (
     <tr>
       <th>
@@ -51,7 +46,16 @@ const CartComponents = ({ id, name, price, description, image }) => {
         </div>
       </td>
       <td className="text-lg">{price}</td>
-      <td className="text-lg">{id}</td>
+      <td className="text-lg">
+        <input
+          min="1"
+          type="number"
+          value={inputQuantity}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          className="w-16 p-1 border rounded-md"
+        />
+      </td>
       <th>
         <button className="btn btn-ghost">Usuń z koszyka</button>
       </th>
@@ -59,43 +63,4 @@ const CartComponents = ({ id, name, price, description, image }) => {
   );
 };
 
-const CartList = () => {
-  return (
-    <div className="text-xl">
-      <table className="table">
-        <thead>
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox border-4 border-buttons-color" />
-              </label>
-            </th>
-            <th className="text-xl">Nazwa</th>
-            <th className="text-xl">Cena</th>
-            <th type="number" className="text-xl">Ilość</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {cartProducts.map((product) => (
-            <CartComponents
-              id={product.id}
-              key={product.id}
-              name={product.name}
-              price={product.price}
-              description={product.description}
-              image={product.image}
-            />
-          ))}
-        </tbody>
-      </table>
-      <div className="flex justify-center items-center mx-auto mt-20">
-        <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
-          Zamów i zapłać przy kasie
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default CartList;
+export default CartComponents;
