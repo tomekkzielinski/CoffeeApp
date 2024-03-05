@@ -40,7 +40,7 @@ const Navbar = () => {
           <NavLink to="login">Logowanie</NavLink>
         </li>
         <li>
-          <NavLink to="cart">Koszyk</NavLink>
+          <NavLink to="cart">Koszyk (0)</NavLink>
         </li>
       </ul>
     </nav>

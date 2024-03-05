@@ -53,4 +53,4 @@ def hello():
     return "Witaj w API mojej aplikacji Flask!"
 
 if __name__ == '__main__':
-    app.run(debug=True)  # 'debug=True' uruchamia aplikację w trybie debugowania.
+    app.run(debug=True, port=5000)

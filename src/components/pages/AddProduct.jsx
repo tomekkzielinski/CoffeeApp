@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+
 
 function AddProduct({ onAddProduct }) {
   const [name, setName] = useState("");
@@ -18,17 +20,27 @@ function AddProduct({ onAddProduct }) {
         price,
         description,
       };
-      // Przekazujemy nowy produkt do funkcji callback
-      onAddProduct(newProduct);
-      // Czyścimy pola formularza po dodaniu produktu
-      setName("");
-      setImage("");
-      setCategory("");
-      setPrice("");
-      setDescription("");
+
+
+ // Wysyłasz żądanie POST do swojego backendu za pomocą Axios
+      axios.post("/products", newProduct)
+        .then(response => {
+          // Po dodaniu produktu do bazy danych, wywołujesz funkcję callback onAddProduct
+          onAddProduct(newProduct);
+          // Czyszczyszenie pola formularza
+          setName("");
+          setImage("");
+          setCategory("");
+          setPrice("");
+          setDescription("");
+          alert("Produkt został dodany!");
+        })
+        .catch(error => {
+          console.error("Błąd podczas dodawania produktu:", error);
+          alert("Wystąpił błąd podczas dodawania produktu.");
+        });
     } else {
       alert("Proszę wypełnić wszystkie pola.");
-
     }
   };
 
