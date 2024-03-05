@@ -54,8 +54,12 @@ def get_products():
     'name': product.name, 
     'description': product.description, 
     'price': product.price, 
+<<<<<<< HEAD
     'image': product.image,  # Zmieniono z 'url' na 'image'
     'category_id': product.category_id
+=======
+    'image': product.image  # Zmieniono z 'url' na 'image'
+>>>>>>> 66d944e0a1f6f490b0d59e9aeb92fbcce19fa871
 } for product in products])
 
 # Uruchomienie aplikacji Flask
