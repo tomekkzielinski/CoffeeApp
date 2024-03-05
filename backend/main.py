@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from backend.models.models import Base, Product  # Upewnij się, że ścieżka importu jest poprawna
+from flask_cors import CORS
 
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
+CORS(app, resources={r"/products/*": {"origins": "http://localhost:3000"}})
 
 # Konfiguracja silnika bazy danych SQLAlchemy
 # Tutaj tworzymy silnik bazy danych, który wskazuje na plik SQLite 'coffeeapp.db' w katalogu głównym projektu.
@@ -29,7 +31,12 @@ def add_product():
         # Pobieramy dane przesłane w formacie JSON z żądania.
         data = request.json
         # Tworzymy nowy obiekt Product, wykorzystując dane z żądania.
-        new_product = Product(name=data['name'], description=data['description'], price=data['price'], url=data['url'])
+        new_product = Product(
+        name=data['name'], 
+        description=data['description'], 
+        price=data['price'], 
+        image=data['image']  # Zmieniono z 'url' na 'image'
+)
         # Dodajemy nowy produkt do sesji i zatwierdzamy zmiany, zapisując produkt w bazie danych.
         session.add(new_product)
         session.commit()
@@ -43,7 +50,13 @@ def get_products():
     # Pobieranie wszystkich produktów z bazy danych
     products = session.query(Product).all()
     # Zamiana listy produktów na format JSON
-    return jsonify([{'name': product.name, 'description': product.description, 'price': product.price, 'url': product.url} for product in products])
+    return jsonify([{
+    'name': product.name, 
+    'description': product.description, 
+    'price': product.price, 
+    'image': product.image,  # Zmieniono z 'url' na 'image'
+    'category_id': product.category_id
+} for product in products])
 
 # Uruchomienie aplikacji Flask
 # W tej sekcji sprawdzamy, czy skrypt jest uruchamiany bezpośrednio (a nie importowany jako moduł).

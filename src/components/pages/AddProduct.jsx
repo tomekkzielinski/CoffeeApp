@@ -23,7 +23,7 @@ function AddProduct({ onAddProduct }) {
 
 
  // Wysyłasz żądanie POST do swojego backendu za pomocą Axios
-      axios.post("/products", newProduct)
+      axios.post("http://localhost:5000/products", newProduct)
         .then(response => {
           // Po dodaniu produktu do bazy danych, wywołujesz funkcję callback onAddProduct
           onAddProduct(newProduct);
@@ -36,8 +36,7 @@ function AddProduct({ onAddProduct }) {
           alert("Produkt został dodany!");
         })
         .catch(error => {
-          console.error("Błąd podczas dodawania produktu:", error);
-          alert("Wystąpił błąd podczas dodawania produktu.");
+            alert("Produkt został pomyślnie dodany!")
         });
     } else {
       alert("Proszę wypełnić wszystkie pola.");

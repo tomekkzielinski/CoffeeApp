@@ -79,3 +79,7 @@ pip install flask
 
 5. Instalacja sqlalchemy
 pip install sqlalchemy
+
+6. Instalacja Flask-Cors
+pip install flask-cors
+
