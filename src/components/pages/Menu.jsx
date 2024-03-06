@@ -19,6 +19,10 @@ const Menu = () => {
     }, []);
 
     const handleDelete = async (productId) => {
+        const confirm = window.confirm('Czy na pewno chcesz usunąć ten produkt?');
+        if (!confirm) return;
+
+
         try {
             await axios.delete(`http://localhost:5000/products/${productId}`);
             setProducts(products.filter(product => product.id !== productId));
