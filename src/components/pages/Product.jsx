@@ -1,57 +1,27 @@
-import React from "react";
+import React from 'react';
+import axios from 'axios';
 
-const products = [
-    {
-        id: 1,
-        image: '../../espresso.jpg',
-        name: 'Espresso',
-        price: 29.99,
-        description: 'Kozacka kawka przygotowana z pasją'
-    },
-    {
-        id: 2,
-        image: '../../americano.jpg',
-        name: 'Produkt 2',
-        price: 49.99,
-        description: 'Opis produktu 2'
-    },
-    {
-        id: 3,
-        image: '../../latte.jpg',
-        name: 'Produkt 3',
-        price: 39.99,
-        description: 'Opis produktu 3'
-    },
-    {
-        id: 4,
-        image: 'sciezka/do/zdjecia3.jpg',
-        name: 'Produkt 4',
-        price: 39.99,
-        description: 'Opis produktu 4'
-    },
-    {
-        id: 5,
-        image: 'sciezka/do/zdjecia3.jpg',
-        name: 'Produkt 5',
-        price: 39.99,
-        description: 'Opis produktu 5'
-    },
-    // Dodaj inne produkty według potrzeb
-];
-
-const Product = ({ name, price, imageUrl }) => {
-
+const Product = ({ products, onDelete }) => { 
+    const handleDelete = async (productId) => {
+        try {
+            await axios.delete(`http://localhost:5000/products/${productId}`);
+            onDelete(productId); // Aktualizacja stanu po usunięciu produktu
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
+    };
     return (
-        <div className="  gap-4 m-5  flex flex-wrap">
-            {products.map(product => (
-                <div key={product.id} className="card w-96 bg-base-100 shadow-xl">
-                    <figure><img src={product.image} alt="Shoes" /></figure>
+        <div className="gap-4 m-5 flex flex-wrap">
+            {products.map((product, index) => (
+                <div key={index} className="card w-96 bg-base-100 shadow-xl">
+                    <figure><img src={product.image} alt="Coffee" /></figure>
                     <div className="card-body">
                         <h2 className="card-title text-xl font-bold">{product.name}</h2>
                         <p className="text-lg">{product.description}</p>
                         <p className="font-bold text-lg">{product.price} zł</p>
                         <div className="card-actions justify-end">
                             <button className="btn bg-main-color">Kup teraz!</button>
+                            <button className="btn bg-main-color" onClick={() => handleDelete(product.id)}>Usuń</button>
                         </div>
                     </div>
                 </div>

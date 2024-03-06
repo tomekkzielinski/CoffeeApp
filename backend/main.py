@@ -45,22 +45,27 @@ def add_product():
 
 @app.route('/products', methods=['GET'])
 def get_products():
-    # Tworzenie sesji bazy danych
-    session = DBSession()
-    # Pobieranie wszystkich produktów z bazy danych
+    # Pobranie wszystkich produktów z bazy danych
     products = session.query(Product).all()
     # Zamiana listy produktów na format JSON
     return jsonify([{
-    'name': product.name, 
-    'description': product.description, 
-    'price': product.price, 
-<<<<<<< HEAD
-    'image': product.image,  # Zmieniono z 'url' na 'image'
-    'category_id': product.category_id
-=======
-    'image': product.image  # Zmieniono z 'url' na 'image'
->>>>>>> 66d944e0a1f6f490b0d59e9aeb92fbcce19fa871
-} for product in products])
+        'name': product.name, 
+        'description': product.description, 
+        'price': product.price, 
+        'image': product.image,
+        'category_id': product.category_id
+    } for product in products])
+
+@app.route('/products/<int:product_id>', methods=['DELETE'])
+def delete_product(id):
+    session = DBSession()
+    product = session.query(Product).filter_by(id=id).first()
+    if product:
+        session.delete(product)
+        session.commit()
+        return jsonify({'message': 'Product deleted successfully'}), 200
+    else:
+        return jsonify({'message': 'Product not found'}), 404
 
 # Uruchomienie aplikacji Flask
 # W tej sekcji sprawdzamy, czy skrypt jest uruchamiany bezpośrednio (a nie importowany jako moduł).
