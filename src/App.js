@@ -12,6 +12,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
+      <div className="container mx-auto ">
       <Routes>
         <Route path="/about" element={<About />}></Route>
         <Route path="/menu" element={<Menu />}></Route>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/cart" element={<Cart />}></Route>
        <Route path="/add-product" element={<AddProduct />}></Route>
       </Routes>
+      </div>
     </div>
   );
 }

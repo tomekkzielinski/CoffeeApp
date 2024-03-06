@@ -32,6 +32,7 @@ def add_product():
         data = request.json
         # Tworzymy nowy obiekt Product, wykorzystując dane z żądania.
         new_product = Product(
+        category_id=data['category_id'],
         name=data['name'], 
         description=data['description'], 
         price=data['price'], 

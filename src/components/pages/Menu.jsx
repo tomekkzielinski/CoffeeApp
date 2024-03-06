@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Product from './Product';
 import axios from 'axios';
+import { Modal } from './Modal';
 
 const Menu = () => {
     const [products, setProducts] = useState([]);
+    const [productIdToDelete, setProductIdToDelete] = useState([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/products');
+                console.log(response.data);
                 setProducts(response.data);
             } catch (error) {
                 console.error(error);
@@ -19,23 +22,31 @@ const Menu = () => {
     }, []);
 
     const handleDelete = async (productId) => {
-        const confirm = window.confirm('Czy na pewno chcesz usunąć ten produkt?');
-        if (!confirm) return;
 
+      document.getElementById('delete_product_modal').showModal();
+      setProductIdToDelete(productId);
 
-        try {
-            await axios.delete(`http://localhost:5000/products/${productId}`);
-            setProducts(products.filter(product => product.id !== productId));
-        } catch (error) {
-            console.error('Error deleting product:', error);
-        }
     };
-
+    const deleteProduct = async () => {
+      try {
+          await axios.delete(`http://localhost:5000/products/${productIdToDelete}`);
+          setProducts(products.filter(product => product.id !== productIdToDelete));
+          document.getElementById('delete_product_modal').close();
+      } catch (error) {
+          console.error('Error deleting product:', error);
+      }
+    }
+    
     return (
         <div>
+          <Modal id="delete_product_modal" title="Czy na pewno chcesz usunąć ten produkt?" description="" onConfirm={() => deleteProduct()} />
             <p className="text-4xl font-bold ml-4 mt-6">Kawa:</p>
             <div className="flex justify-center items-center">
-                <Product products={products} onDelete={handleDelete} />
+                <Product products={products.filter(product => product.category_id === 1)} onDelete={handleDelete} />
+            </div>
+            <p className="text-4xl font-bold ml-4 mt-6">Przekąski:</p>
+            <div className="flex justify-center items-center">
+                <Product products={products.filter(product => product.category_id === 2)} onDelete={handleDelete} />
             </div>
         </div>
     );
