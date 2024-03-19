@@ -27,3 +27,11 @@ pip install sqlalchemy
 6. Instalacja Flask-Cors
 pip install flask-cors
 
+7. dodanie Alembic - narzedzie do migracji baz danych
+pip install alembic
+alembic init alembic
+
+8. migracja bazy
+alembic revision --autogenerate -m "Initial migration"
+alembic upgrade head
+

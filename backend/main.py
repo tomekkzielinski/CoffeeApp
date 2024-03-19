@@ -3,6 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from backend.models.models import Base, Product  # Upewnij się, że ścieżka importu jest poprawna
 from flask_cors import CORS
+from backend.models.models import Base, Product, Cart
+
 
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
@@ -24,25 +26,22 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Definicja endpointu API do dodawania nowych produktów
+
 @app.route('/products', methods=['POST'])
 def add_product():
-    # Obsługujemy żądanie POST do dodawania nowego produktu.
     if request.method == 'POST':
-        # Pobieramy dane przesłane w formacie JSON z żądania.
         data = request.json
-        # Tworzymy nowy obiekt Product, wykorzystując dane z żądania.
         new_product = Product(
-        category_id=data['category_id'],
-        name=data['name'], 
-        description=data['description'], 
-        price=data['price'], 
-        image=data['image']  # Zmieniono z 'url' na 'image'
-)
-        # Dodajemy nowy produkt do sesji i zatwierdzamy zmiany, zapisując produkt w bazie danych.
+            name=data['name'],
+            description=data['description'],
+            price=data['price'],
+            image=data['image'],
+            category_id=data['category_id']  # Upewnij się, że tutaj również oczekujesz 'category_id'
+        )
         session.add(new_product)
         session.commit()
-        # Zwracamy odpowiedź JSON, informującą o sukcesie operacji.
         return jsonify({'message': 'Product added successfully!'}), 201
+
 
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -69,6 +68,45 @@ def delete_product(id):
     else:
         return jsonify({'message': 'Product not found'}), 404
 
+@app.route('/cart', methods=['POST'])
+def add_to_cart():
+    data = request.json
+    new_cart_item = Cart(
+        product_id=data['product_id'],
+        quantity=data['quantity']
+    )
+    session.add(new_cart_item)
+    session.commit()
+    return jsonify({'message': 'Product added to cart successfully'}), 201
+
+@app.route('/cart', methods=['GET'])
+def get_cart_contents():
+    # Tworzenie sesji bazy danych
+    session = DBSession()
+
+    # Pobieranie wszystkich wpisów z koszyka z bazy danych
+    cart_items = session.query(Cart).all()
+
+    # Przygotowanie danych do odpowiedzi, w tym pobranie szczegółów produktów
+    cart_data = []
+    for item in cart_items:
+        product = session.query(Product).filter_by(id=item.product_id).first()
+        cart_data.append({
+            'cart_id': item.id,
+            'product_id': item.product_id,
+            'quantity': item.quantity,
+            'product_name': product.name,
+            'product_description': product.description,
+            'product_price': product.price,
+            'product_image': product.image,
+            'category_id': product.category_id
+        })
+
+    # Zamykanie sesji
+    session.close()
+
+    # Zwracanie danych w formacie JSON
+    return jsonify(cart_data)
 
 # Uruchomienie aplikacji Flask
 # W tej sekcji sprawdzamy, czy skrypt jest uruchamiany bezpośrednio (a nie importowany jako moduł).

@@ -16,7 +16,7 @@ function AddProduct({ onAddProduct }) {
       const newProduct = {
         name,
         image,
-        category,
+        category_id: category,
         price,
         description,
       };
@@ -70,8 +70,8 @@ function AddProduct({ onAddProduct }) {
           className="w-full mb-2 p-2 rounded-md border border-gray-300"
         >
           <option value="">Wybierz kategorię</option>
-          <option value="kawa">Kawa</option>
-          <option value="przekaski">Przekąski</option>
+          <option value="1">Kawa</option>
+          <option value="2">Przekąski</option>
         </select>
         <input
           type="number"
