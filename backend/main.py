@@ -8,7 +8,7 @@ from backend.models.models import Base, Product, Cart
 
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
-CORS(app, resources={r"/products/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # Konfiguracja silnika bazy danych SQLAlchemy
 # Tutaj tworzymy silnik bazy danych, który wskazuje na plik SQLite 'coffeeapp.db' w katalogu głównym projektu.
@@ -71,13 +71,18 @@ def delete_product(id):
 @app.route('/cart', methods=['POST'])
 def add_to_cart():
     data = request.json
-    new_cart_item = Cart(
-        product_id=data['product_id'],
-        quantity=data['quantity']
-    )
-    session.add(new_cart_item)
-    session.commit()
-    return jsonify({'message': 'Product added to cart successfully'}), 201
+    print(data)  # Dodaj to, aby zobaczyć przychodzące dane.
+    try:
+        new_cart_item = Cart(
+            product_id=data['product_id'],
+            quantity=data['quantity']
+        )
+        session.add(new_cart_item)
+        session.commit()
+        return jsonify({'message': 'Product added to cart successfully'}), 201
+    except KeyError as e:
+        print(f"KeyError: Missing key {e}")
+        return jsonify({'error': f'Missing key {e}'}), 400
 
 @app.route('/cart', methods=['GET'])
 def get_cart_contents():
