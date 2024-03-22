@@ -1,39 +1,50 @@
+// Komponent AddToCartModal.js
 import React, { useState } from "react";
-import axios from "axios"; // Zaimportuj axios, jeśli jeszcze tego nie zrobiłeś
+import axios from "axios";
+import Alert from "./Alert";
 
-const AddToCartModal = ({ productName, price, onClose, addToCartModal }) => {
-  const [quantity, setQuantity] = useState(1); // Ustawienie domyślnej ilości 
-  const [id, setId] = useState("");
+const AddToCartModal = () => {
+  const [quantity, setQuantity] = useState(1);
+  const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
+  const [id, setId] = useState(""); 
 
+  // Zaktualizowana funkcja onClose, która teraz czeka na ukrycie alertu
+  const onClose = () => {
+    setShowAlert(true); // Najpierw pokazujemy alert
+
+    // Używamy setTimeout, aby opóźnić zamknięcie modala
+    setTimeout(() => {
+      document.getElementById("add_to_cart_modal").close();
+      setShowAlert(false); // Ukrywamy alert po zamknięciu modala
+    }, 900); // 900ms to czas trwania animacji zamykania modala
+  };
+
+  
   const addToCart = async () => {
     try {
-      console.log("Dodaję produkt do koszyka:", id)
-      await axios.post('http://localhost:5000/cart', {
-        product_id: id,
-        quantity: quantity
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      alert("Produkt dodany do koszyka");
-      onClose(); // Zamknięcie modala po dodaniu produktu
+      console.log("Dodaję produkt do koszyka:", id);
+      await axios.post(
+        "http://localhost:5000/cart",
+        { product_id: id, quantity: quantity },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      
+      onClose(); // Zamknij modal
+      setShowAlert(true); // Pokaż alert
     } catch (error) {
       console.error("Błąd przy dodawaniu produktu do koszyka:", error);
     }
   };
 
-
-
   return (
-    <dialog id="add_to_cart_modal"   className="modal">
+    <dialog id="add_to_cart_modal" className="modal">
+     
       <div className="modal-box w-11/12 max-w-5xl">
-        <h3 className="font-bold text-lg">Dodaj produkt do koszyka</h3>
-        <p className="py-4">Produkt: {productName}</p>
-        <p className="py-4">Cena: {price} zł</p>
-        <div className="py-4">
-          <label htmlFor="quantity" className="block mb-2">Ilość:</label>
+      <h3 className="font-bold text-lg">Dodaj produkt do koszyka</h3>
+  
+  
+        <div className="py-4 flex flex-col items-center">
+          <label htmlFor="quantity" className="block mb-2 font-bold">Ilość:</label>
           <input
             type="number"
             id="quantity"
@@ -43,14 +54,14 @@ const AddToCartModal = ({ productName, price, onClose, addToCartModal }) => {
             className="input input-bordered w-full max-w-xs"
           />
         </div>
+        {/* Reszta kodu */}
         <div className="modal-action">
+        <Alert show={showAlert} onHide={() => setShowAlert(false)} /> {/* Dodanie Alertu */}
           <button onClick={addToCart} className="btn bg-main-color">
             Dodaj do koszyka
           </button>
-          <form method="dialog">
-        {/* if there is a button in form, it will close the modal */}
-        <button className="btn  bg-main-color" >Zamknij</button>
-      </form>
+          {/* Inne przyciski */}
+          
         </div>
       </div>
     </dialog>

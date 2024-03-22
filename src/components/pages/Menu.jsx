@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import Product from "./Product";
 import axios from "axios";
 import { Modal } from "./Modal";
-import AddToCartModal from "./AddToCartModal";
+
+import Alert from "./Alert";
 
 const Menu = () => {
   const [products, setProducts] = useState([]);
   const [productIdToDelete, setProductIdToDelete] = useState([]);
 
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/products");
-        console.log(response.data);
-        setProducts(response.data);
+        setProducts(response.data); 
       } catch (error) {
         console.error(error);
       }
@@ -38,10 +39,14 @@ const Menu = () => {
     }
   };
 
+  const showAlert = () => {
+    document.getElementById("alert").showModal();
+  }
+
 
   return (
     <div>
-
+        <Alert showAlert={showAlert} id="alert"/>
       <Modal
         id="delete_product_modal"
         title="Czy na pewno chcesz usunąć ten produkt?"

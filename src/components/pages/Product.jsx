@@ -1,15 +1,18 @@
 import React, {useState} from "react";
 import AddToCartModal from "./AddToCartModal";
 
-const Product = ({ products, onDelete, modalId }) => {
+const Product = ({ products, onDelete }) => {
 
 
   const [id, setId] = useState("add_to_cart_modal");
+
+
 
   const handleAddToCartModal = async (modalId) => {
 
     document.getElementById("add_to_cart_modal").showModal();
     setId(modalId);
+
    
   };
 

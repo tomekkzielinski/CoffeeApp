@@ -1,34 +1,28 @@
 import CartComponents from "./CartComponents";
-
-
-const cartProducts = [
-    {
-      id: 1,
-      image: "../../espresso.jpg",
-      name: "Espresso",
-      price: 29.99,
-      description: "Kozacka kawka przygotowana z pasją",
-    },
-    {
-      id: 2,
-      image: "../../americano.jpg",
-      name: "Produkt 2",
-      price: 49.99,
-      description: "Trochę gorsza kawka ale też spoko",
-    },
-    {
-      id: 3,
-      image: "../../latte.jpg",
-      name: "Produkt 3",
-      price: 39.99,
-      description: "Da się wypić",
-    }
-  ];
-
-  
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 
 const CartList = () => {
+
+  const [products, setProducts] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchCartProducts = async () => {
+      try {
+        
+        const response = await axios.get("http://localhost:5000/cart");
+        console.log(response.data);
+        setProducts(response.data);
+        console.log("fetching cart products", products);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchCartProducts();
+  }, []);
 
     const handleQuantityChange = (productId, newQuantity) => {
         const updatedCartProducts = cartProducts.map((product) => {

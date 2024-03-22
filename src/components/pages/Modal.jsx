@@ -13,9 +13,9 @@ export const Modal = ({id, title, description, onConfirm}) => {
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
+              <button className="btn">Zamknij</button>
             </form>
-            <button className="btn" onClick={onConfirm}>Confirm</button>
+            <button className="btn" onClick={onConfirm}>Potwierdź</button>
           </div>
         </div>
       </dialog>
