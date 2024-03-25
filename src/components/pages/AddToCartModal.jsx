@@ -1,12 +1,12 @@
 // Komponent AddToCartModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 
 const AddToCartModal = () => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
-  const [id, setId] = useState(""); 
+  const [products, setProducts] = useState([]);
 
   // Zaktualizowana funkcja onClose, która teraz czeka na ukrycie alertu
   const onClose = () => {
@@ -19,20 +19,49 @@ const AddToCartModal = () => {
     }, 900); // 900ms to czas trwania animacji zamykania modala
   };
 
-  
-  const addToCart = async () => {
+
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/products");
+        setProducts(response.data); 
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+
+
+
+
+  const addToCart = async (productId, quantity) => {
     try {
-      console.log("Dodaję produkt do koszyka:", id);
       await axios.post(
         "http://localhost:5000/cart",
-        { product_id: id, quantity: quantity },
+        { product_id: productId, quantity: quantity },
         { headers: { "Content-Type": "application/json" } }
       );
-      
+  
       onClose(); // Zamknij modal
       setShowAlert(true); // Pokaż alert
     } catch (error) {
       console.error("Błąd przy dodawaniu produktu do koszyka:", error);
+    }
+  };
+  
+  const addAllToCart = async () => {
+    try {
+      const promises = products.map(async (product) => {
+        await addToCart(product.id, quantity); // Użyj aktualnej wartości quantity
+      });
+  
+      await Promise.all(promises);
+    } catch (error) {
+      console.error("Błąd przy dodawaniu produktów do koszyka:", error);
     }
   };
 
@@ -57,7 +86,7 @@ const AddToCartModal = () => {
         {/* Reszta kodu */}
         <div className="modal-action">
         <Alert show={showAlert} onHide={() => setShowAlert(false)} /> {/* Dodanie Alertu */}
-          <button onClick={addToCart} className="btn bg-main-color">
+          <button onClick={addAllToCart} className="btn bg-main-color">
             Dodaj do koszyka
           </button>
           {/* Inne przyciski */}
