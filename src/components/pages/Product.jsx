@@ -1,19 +1,16 @@
 import React, {useState} from "react";
 import AddToCartModal from "./AddToCartModal";
 
+
 const Product = ({ products, onDelete }) => {
 
-
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const [id, setId] = useState("add_to_cart_modal");
 
 
-
-  const handleAddToCartModal = async (modalId) => {
-
+  const handleAddToCartModal = async (productId) => {
+    setSelectedProductId(productId);
     document.getElementById("add_to_cart_modal").showModal();
-    setId(modalId);
-
-   
   };
 
   return (
@@ -21,6 +18,9 @@ const Product = ({ products, onDelete }) => {
       <AddToCartModal
         id="add_to_cart_modal"
         addToCartModal={() => handleAddToCartModal()}
+        selectedProductId={selectedProductId}
+        resetSelectedProduct={() => setSelectedProductId(null)}
+
       />
       {products.map((product) => (
         <div key={product.id} className="card w-96 bg-base-100 shadow-xl">
@@ -34,7 +34,7 @@ const Product = ({ products, onDelete }) => {
             <div className="card-actions justify-end">
               <button
                 className="btn bg-main-color"
-                onClick={() => handleAddToCartModal()}
+                onClick={() => handleAddToCartModal(product.id)}
               >
                 Kup teraz!
               </button>

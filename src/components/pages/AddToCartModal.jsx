@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 
-const AddToCartModal = () => {
+const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
   const [quantity, setQuantity] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
   const [products, setProducts] = useState([]);
@@ -16,6 +16,7 @@ const AddToCartModal = () => {
     setTimeout(() => {
       document.getElementById("add_to_cart_modal").close();
       setShowAlert(false); // Ukrywamy alert po zamknięciu modala
+      resetSelectedProduct();
     }, 900); // 900ms to czas trwania animacji zamykania modala
   };
 
@@ -34,34 +35,19 @@ const AddToCartModal = () => {
     fetchProducts();
   }, []);
 
-
-
-
-
-  const addToCart = async (productId, quantity) => {
+  const addToCart = async () => {
+    if (!selectedProductId) return;
     try {
-      await axios.post(
-        "http://localhost:5000/cart",
-        { product_id: productId, quantity: quantity },
-        { headers: { "Content-Type": "application/json" } }
-      );
-  
+      await axios.post("http://localhost:5000/cart", {
+        product_id: selectedProductId,
+        quantity: quantity
+      });
+
       onClose(); // Zamknij modal
       setShowAlert(true); // Pokaż alert
     } catch (error) {
       console.error("Błąd przy dodawaniu produktu do koszyka:", error);
-    }
-  };
-  
-  const addAllToCart = async () => {
-    try {
-      const promises = products.map(async (product) => {
-        await addToCart(product.id, quantity); // Użyj aktualnej wartości quantity
-      });
-  
-      await Promise.all(promises);
-    } catch (error) {
-      console.error("Błąd przy dodawaniu produktów do koszyka:", error);
+   
     }
   };
 
@@ -86,7 +72,7 @@ const AddToCartModal = () => {
         {/* Reszta kodu */}
         <div className="modal-action">
         <Alert show={showAlert} onHide={() => setShowAlert(false)} /> {/* Dodanie Alertu */}
-          <button onClick={addAllToCart} className="btn bg-main-color">
+          <button onClick={addToCart} className="btn bg-main-color">
             Dodaj do koszyka
           </button>
           {/* Inne przyciski */}
