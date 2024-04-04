@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 
 const CartComponents = ({
   id,
+  
   name,
   price,
   description,
@@ -9,7 +12,9 @@ const CartComponents = ({
   quantity,
   onQuantityChange,
 }) => {
+
   const [inputQuantity, setInputQuantity] = useState(quantity);
+
 
   const handleInputChange = (e) => {
     const newQuantity = parseInt(e.target.value);

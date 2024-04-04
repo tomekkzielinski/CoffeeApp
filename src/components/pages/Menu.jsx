@@ -2,19 +2,20 @@ import React, { useState, useEffect } from "react";
 import Product from "./Product";
 import axios from "axios";
 import { Modal } from "./Modal";
+import  AddToCartModal  from "./AddToCartModal";
 
 import Alert from "./Alert";
 
 const Menu = () => {
   const [products, setProducts] = useState([]);
   const [productIdToDelete, setProductIdToDelete] = useState([]);
-
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/products");
-        setProducts(response.data); 
+        setProducts(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -41,12 +42,24 @@ const Menu = () => {
 
   const showAlert = () => {
     document.getElementById("alert").showModal();
-  }
-
+  };
+ 
+  
+  const handleAddToCartModal = async (productId) => {
+    console.log({productId});
+    setSelectedProductId(productId);
+    document.getElementById("add_to_cart_modal").showModal();
+  };
 
   return (
     <div>
-        <Alert showAlert={showAlert} id="alert"/>
+      <AddToCartModal
+        id="add_to_cart_modal"
+        addToCartModal={() => handleAddToCartModal()}
+        selectedProductId={selectedProductId}
+        resetSelectedProduct={() => setSelectedProductId(null)}
+      />
+      <Alert showAlert={showAlert} id="alert" />
       <Modal
         id="delete_product_modal"
         title="Czy na pewno chcesz usunąć ten produkt?"
@@ -58,6 +71,7 @@ const Menu = () => {
         <Product
           products={products.filter((product) => product.category_id === 1)}
           onDelete={handleDelete}
+          handleAddToCart={handleAddToCartModal}
         />
       </div>
       <p className="text-4xl font-bold ml-4 mt-6">Przekąski:</p>
@@ -65,6 +79,7 @@ const Menu = () => {
         <Product
           products={products.filter((product) => product.category_id === 2)}
           onDelete={handleDelete}
+          handleAddToCart={handleAddToCartModal}
         />
       </div>
     </div>

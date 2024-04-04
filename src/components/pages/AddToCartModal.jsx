@@ -11,22 +11,19 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
   // Zaktualizowana funkcja onClose, która teraz czeka na ukrycie alertu
   const onClose = () => {
     setShowAlert(true); // Najpierw pokazujemy alert
-
+    resetSelectedProduct();
     // Używamy setTimeout, aby opóźnić zamknięcie modala
     setTimeout(() => {
       document.getElementById("add_to_cart_modal").close();
       setShowAlert(false); // Ukrywamy alert po zamknięciu modala
-      resetSelectedProduct();
     }, 900); // 900ms to czas trwania animacji zamykania modala
   };
-
-
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/products");
-        setProducts(response.data); 
+        setProducts(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -36,30 +33,30 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
   }, []);
 
   const addToCart = async () => {
+    console.log({ selectedProductId });
     if (!selectedProductId) return;
     try {
       await axios.post("http://localhost:5000/cart", {
         product_id: selectedProductId,
-        quantity: quantity
+        quantity: quantity,
       });
 
       onClose(); // Zamknij modal
       setShowAlert(true); // Pokaż alert
     } catch (error) {
       console.error("Błąd przy dodawaniu produktu do koszyka:", error);
-   
     }
   };
 
   return (
     <dialog id="add_to_cart_modal" className="modal">
-     
       <div className="modal-box w-11/12 max-w-5xl">
-      <h3 className="font-bold text-lg">Dodaj produkt do koszyka</h3>
-  
-  
+        <h3 className="font-bold text-lg">Dodaj produkt do koszyka</h3>
+
         <div className="py-4 flex flex-col items-center">
-          <label htmlFor="quantity" className="block mb-2 font-bold">Ilość:</label>
+          <label htmlFor="quantity" className="block mb-2 font-bold">
+            Ilość:
+          </label>
           <input
             type="number"
             id="quantity"
@@ -71,14 +68,17 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
         </div>
         {/* Reszta kodu */}
         <div className="modal-action">
-        <Alert show={showAlert} onHide={() => setShowAlert(false)} /> {/* Dodanie Alertu */}
+          <Alert show={showAlert} onHide={() => setShowAlert(false)} />{" "}
+          {/* Dodanie Alertu */}
           <button onClick={addToCart} className="btn bg-main-color">
             Dodaj do koszyka
           </button>
           <form method="dialog">
-      {/* if there is a button in form, it will close the modal */}
-      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
         </div>
       </div>
     </dialog>

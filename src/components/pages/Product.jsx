@@ -1,27 +1,15 @@
 import React, {useState} from "react";
-import AddToCartModal from "./AddToCartModal";
 
 
-const Product = ({ products, onDelete }) => {
-
-  const [selectedProductId, setSelectedProductId] = useState(null);
-  const [id, setId] = useState("add_to_cart_modal");
 
 
-  const handleAddToCartModal = async (productId) => {
-    setSelectedProductId(productId);
-    document.getElementById("add_to_cart_modal").showModal();
-  };
+const Product = ({ products, onDelete, handleAddToCart }) => {
+
+
 
   return (
     <div className="gap-4 m-5 flex flex-wrap">
-      <AddToCartModal
-        id="add_to_cart_modal"
-        addToCartModal={() => handleAddToCartModal()}
-        selectedProductId={selectedProductId}
-        resetSelectedProduct={() => setSelectedProductId(null)}
 
-      />
       {products.map((product) => (
         <div key={product.id} className="card w-96 bg-base-100 shadow-xl">
           <figure>
@@ -34,7 +22,7 @@ const Product = ({ products, onDelete }) => {
             <div className="card-actions justify-end">
               <button
                 className="btn bg-main-color"
-                onClick={() => handleAddToCartModal(product.id)}
+                onClick={() => handleAddToCart(product.id)}
               >
                 Kup teraz!
               </button>
