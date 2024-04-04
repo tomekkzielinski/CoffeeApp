@@ -13,7 +13,7 @@ const CartList = () => {
         setProducts(response.data);
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
         var cartProducts = response.data;
-        console.log(cartProducts);
+       
       } catch (error) {
         console.error(error);
       }
@@ -22,18 +22,7 @@ const CartList = () => {
     fetchCartProducts();
   }, []);
 
-  const handleQuantityChange = (productId, newQuantity) => {
-    const updatedCartProducts = cartProducts.map((product) => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          quantity: newQuantity,
-        };
-      }
-      return product;
-    });
-    setCartProducts(updatedCartProducts); // Zaktualizuj stan cartProducts po zmianie ilości produktu
-  };
+
 
   return (
     <div className="text-xl">
@@ -59,12 +48,12 @@ const CartList = () => {
         <tbody>
           {cartProducts.map((product, index) => (
             <CartComponents
-              id={product.id} // Poprawione przekazywanie id produktu
+              id={product.product_id} // Poprawione przekazywanie id produktu
               key={`${product.id}-${index}`}
-              name={product.name} // Poprawione przekazywanie nazwy produktu
-              price={product.price}
+              name={product.product_name} // Poprawione przekazywanie nazwy produktu
+              price={product.product_price}
               description={product.description}
-              image={product.image}
+              image={product.product_image}
               quantity={product.quantity}
               
             />

@@ -1,31 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, {} from "react";
 
 
 const CartComponents = ({
   id,
-  
   name,
   price,
   description,
   image,
-  quantity,
-  onQuantityChange,
+  quantity
 }) => {
 
-  const [inputQuantity, setInputQuantity] = useState(quantity);
 
-
-  const handleInputChange = (e) => {
-    const newQuantity = parseInt(e.target.value);
-    if (!isNaN(newQuantity) && newQuantity >= 0) {
-      setInputQuantity(newQuantity);
-    }
-  };
-
-  const handleBlur = () => {
-    onQuantityChange(id, parseInt(inputQuantity));
-  };
 
   return (
     <tr>
@@ -51,16 +36,7 @@ const CartComponents = ({
         </div>
       </td>
       <td className="text-lg">{price}</td>
-      <td className="text-lg">
-        <input
-          min="1"
-          type="number"
-          value={inputQuantity}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          className="w-16 p-1 border rounded-md"
-        />
-      </td>
+      <td className="text-lg">{quantity}</td>
       <th>
         <button className="btn btn-ghost">Usuń z koszyka</button>
       </th>
