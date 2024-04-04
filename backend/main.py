@@ -112,6 +112,23 @@ def get_cart_contents():
 
     # Zwracanie danych w formacie JSON
     return jsonify(cart_data)
+    
+@app.route('/cart/<int:cart_id>', methods=['DELETE'])
+def remove_from_cart(cart_id):
+    # Tworzenie sesji bazy danych
+    session = DBSession()
+
+    # Pobieranie produktu z koszyka, który ma zostać usunięty
+    cart_item = session.query(Cart).filter_by(id=cart_id).first()
+
+    if cart_item:
+        session.delete(cart_item)
+        session.commit()
+        session.close()
+        return jsonify({'message': 'Item removed from cart'}), 200
+    else:
+        session.close()
+        return jsonify({'message': 'Item not found in cart'}), 404
 
 # Uruchomienie aplikacji Flask
 # W tej sekcji sprawdzamy, czy skrypt jest uruchamiany bezpośrednio (a nie importowany jako moduł).

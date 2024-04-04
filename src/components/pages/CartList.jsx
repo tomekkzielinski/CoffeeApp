@@ -48,6 +48,7 @@ const CartList = () => {
         <tbody>
           {cartProducts.map((product, index) => (
             <CartComponents
+              cartId={product.cart_id}
               id={product.product_id} // Poprawione przekazywanie id produktu
               key={`${product.id}-${index}`}
               name={product.product_name} // Poprawione przekazywanie nazwy produktu
