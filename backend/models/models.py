@@ -12,7 +12,7 @@ class Category(Base):
 class Product(Base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    name = Column(String)
     description = Column(String)
     price = Column(Float)
     image = Column(String)  # Zmieniono z 'url' na 'image'
@@ -28,6 +28,7 @@ class Cart(Base):
     id = Column(Integer, primary_key=True)
     product_id = Column(Integer, ForeignKey('products.id'))
     # user_id = Column(Integer, ForeignKey('users.id')) # Jeśli masz model User
+    session_id = Column(String)
     quantity = Column(Integer, default=1)
     # Można dodać więcej pól, np. status koszyka, datę dodania itp.
 

@@ -32,15 +32,40 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
     fetchProducts();
   }, []);
 
+  function getSessionId() {
+    // Spróbuj przeczytać cookie o nazwie 'session_id'
+    const sessionIdCookie = document.cookie.split('; ').find(row => row.startsWith('session_id='));
+  
+    if (sessionIdCookie) {
+      return sessionIdCookie.split('=')[1];
+    } else {
+      // Jeśli nie ma cookie, generujemy nowe ID sesji
+      const newSessionId = generateSessionId();
+      // Zapisz cookie z ID sesji, ustaw ważność na 7 dni
+      document.cookie = `session_id=${newSessionId};max-age=${7 * 24 * 60 * 60};path=/`;
+      return newSessionId;
+    }
+  }
+  
+  function generateSessionId() {
+    // Prosta funkcja do generowania pseudo-losowego ID sesji
+    return 'xxxx-xxxx-xxxx-xxxx'.replace(/[x]/g, function(c) {
+      const r = (Math.random() * 16) | 0;
+      return r.toString(16);
+    });
+  }
+  
   const addToCart = async () => {
     console.log({ selectedProductId });
     if (!selectedProductId) return;
+    const session_id = getSessionId();
     try {
       await axios.post("http://localhost:5000/cart", {
         product_id: selectedProductId,
         quantity: quantity,
+        session_id: session_id,
       });
-
+      console.log(session_id)
       onClose(); // Zamknij modal
       setShowAlert(true); // Pokaż alert
     } catch (error) {
