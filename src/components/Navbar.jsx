@@ -31,12 +31,6 @@ const Navbar = () => {
           <NavLink to="services">Promocje</NavLink>
         </li>
         <li>
-          <NavLink to="contact">Kontakt</NavLink>
-        </li>
-        <li>
-          <NavLink to="about">O nas</NavLink>
-        </li>
-        <li>
           <NavLink to="login">Logowanie</NavLink>
         </li>
         <li>

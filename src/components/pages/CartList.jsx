@@ -61,11 +61,17 @@ const CartList = () => {
           ))}
         </tbody>
       </table>
+      <div className="flex justify-end font-bold items-center mx-auto mt-20">Suma: 125.45</div>
       <div className="flex justify-center items-center mx-auto mt-20">
+        
         <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
           Zamów i zapłać przy kasie
         </button>
+        
       </div>
+      
+
+
     </div>
   );
 };

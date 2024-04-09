@@ -23,6 +23,7 @@ const CartComponents = ({
 
 
   return (
+    <>
     <tr>
       <th>
         <label>
@@ -51,7 +52,10 @@ const CartComponents = ({
                 <button onClick={removeFromCart} className="btn btn-ghost">Usuń z koszyka</button>
 
       </th>
+     
     </tr>
+    
+    </>
   );
 };
 

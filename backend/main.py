@@ -75,7 +75,8 @@ def add_to_cart():
     try:
         new_cart_item = Cart(
             product_id=data['product_id'],
-            quantity=data['quantity']
+            quantity=data['quantity'],
+            session_id=data['session_id']
         )
         session.add(new_cart_item)
         session.commit()

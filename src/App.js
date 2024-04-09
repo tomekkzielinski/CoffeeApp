@@ -43,6 +43,7 @@ if (sessionId == "") {
   sessionId = Math.random().toString(36).substr(2, 10); // Przykładowe generowanie identyfikatora sesji
   setCookie("sessionId", sessionId, 30); // Ustawienie pliku cookie na 30 dni
 };
+
   return (
     <div className="App">
       <Navbar />

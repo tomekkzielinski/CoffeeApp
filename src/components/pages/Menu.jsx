@@ -58,6 +58,7 @@ const Menu = () => {
         addToCartModal={() => handleAddToCartModal()}
         selectedProductId={selectedProductId}
         resetSelectedProduct={() => setSelectedProductId(null)}
+        products={products}
       />
       <Alert showAlert={showAlert} id="alert" />
       <Modal

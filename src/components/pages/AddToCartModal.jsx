@@ -7,6 +7,8 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
   const [quantity, setQuantity] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
   const [products, setProducts] = useState([]);
+  const [answerMilk, setAnswerMilk] = useState(undefined);
+  const [answerSugar, setAnswerSugar] = useState(false);
 
   // Zaktualizowana funkcja onClose, która teraz czeka na ukrycie alertu
   const onClose = () => {
@@ -24,6 +26,7 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
       try {
         const response = await axios.get("http://localhost:5000/products");
         setProducts(response.data);
+        console.log("produkty z dupy", products);
       } catch (error) {
         console.error(error);
       }
@@ -32,40 +35,32 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
     fetchProducts();
   }, []);
 
-  function getSessionId() {
-    // Spróbuj przeczytać cookie o nazwie 'session_id'
-    const sessionIdCookie = document.cookie.split('; ').find(row => row.startsWith('session_id='));
-  
-    if (sessionIdCookie) {
-      return sessionIdCookie.split('=')[1];
-    } else {
-      // Jeśli nie ma cookie, generujemy nowe ID sesji
-      const newSessionId = generateSessionId();
-      // Zapisz cookie z ID sesji, ustaw ważność na 7 dni
-      document.cookie = `session_id=${newSessionId};max-age=${7 * 24 * 60 * 60};path=/`;
-      return newSessionId;
+  function getCookie(cookieName) {
+    var name = cookieName + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var cookieArray = decodedCookie.split(";");
+    for (var i = 0; i < cookieArray.length; i++) {
+      var cookie = cookieArray[i];
+      while (cookie.charAt(0) == " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) == 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
     }
+    return "";
   }
-  
-  function generateSessionId() {
-    // Prosta funkcja do generowania pseudo-losowego ID sesji
-    return 'xxxx-xxxx-xxxx-xxxx'.replace(/[x]/g, function(c) {
-      const r = (Math.random() * 16) | 0;
-      return r.toString(16);
-    });
-  }
-  
+
   const addToCart = async () => {
-    console.log({ selectedProductId });
     if (!selectedProductId) return;
-    const session_id = getSessionId();
+    var sessionId = getCookie("sessionId"); // Pobierz wartość identyfikatora sesji z pliku cookie
+
     try {
       await axios.post("http://localhost:5000/cart", {
         product_id: selectedProductId,
         quantity: quantity,
-        session_id: session_id,
+        session_id: sessionId, // Dodaj identyfikator sesji do danych przesyłanych w zapytaniu POST
       });
-      console.log(session_id)
       onClose(); // Zamknij modal
       setShowAlert(true); // Pokaż alert
     } catch (error) {
@@ -73,6 +68,17 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
     }
   };
 
+  function handleTheAnswerChangeMilk(e) {
+    const value = e.target.value === "true"; // Konwertuj wartość na boolean
+    console.log("milk", value);
+
+    setAnswerMilk(value);
+  }
+  function handleTheAnswerChangeSugar(e) {
+    const value = e.target.value === "true"; // Konwertuj wartość na boolean
+    console.log("sugar", value);
+    setAnswerSugar(value);
+  }
   return (
     <dialog id="add_to_cart_modal" className="modal">
       <div className="modal-box w-11/12 max-w-5xl">
@@ -90,7 +96,82 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
             min="1"
             className="input input-bordered w-full max-w-xs"
           />
+
+          {products.some((product) => product.category_id !== 1) && (
+            <div>
+              <div>
+                <label className="block mt-5 mb-3 font-bold">Mleko</label>
+                <div>
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="no-milk"
+                      value={false}
+                      name="answerMilk"
+                      onChange={handleTheAnswerChangeMilk}
+                      className="radio-md font-bold mr-4 mb-2"
+                      checked={answerMilk === false}
+                    />
+                    <label htmlFor="no-milk" className="text-lg">
+                      NIE
+                    </label>
+                  </div>
+
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="yes-milk"
+                      name="answerMilk"
+                      value={true}
+                      onChange={handleTheAnswerChangeMilk}
+                      checked={answerMilk === true}
+                      className="radio-md font-bold mr-4"
+                    />
+                    <label htmlFor="yes-milk" className="text-lg">
+                      TAK
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block mt-5 mb-3 font-bold">Cukier</label>
+                <div>
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="no-sugar"
+                      value={false}
+                      name="answerSugar"
+                      onChange={handleTheAnswerChangeSugar}
+                      className="radio-md font-bold mr-4 mb-2"
+                      checked={answerSugar === false}
+                    />
+                    <label htmlFor="no-sugar" className="text-lg">
+                      NIE
+                    </label>
+                  </div>
+
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="yes-sugar"
+                      name="answerSugar"
+                      value={true}
+                      onChange={handleTheAnswerChangeSugar}
+                      checked={answerSugar === true}
+                      className="radio-md font-bold mr-4"
+                    />
+                    <label htmlFor="yes-sugar" className="text-lg">
+                      TAK
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+
         {/* Reszta kodu */}
         <div className="modal-action">
           <Alert show={showAlert} onHide={() => setShowAlert(false)} />{" "}
