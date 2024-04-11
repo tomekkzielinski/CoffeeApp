@@ -1,19 +1,16 @@
-import React, {useState} from "react";
-
-
-
+import React, { useState } from "react";
 
 const Product = ({ products, onDelete, handleAddToCart }) => {
-
-
-
   return (
     <div className="gap-4 m-5 flex flex-wrap">
-
       {products.map((product) => (
         <div key={product.id} className="card w-96 bg-base-100 shadow-xl">
           <figure>
-            <img src={product.image} alt="Shoes" />
+            <img
+              src={product.image}
+              alt="Produkt"
+              className="max-h-96 w-max"
+            />  
           </figure>
           <div className="card-body">
             <h2 className="card-title text-xl font-bold">{product.name}</h2>

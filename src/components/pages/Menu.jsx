@@ -52,7 +52,7 @@ const Menu = () => {
   };
 
   return (
-    <div>
+    <div className="grid justify-items-start">
       <AddToCartModal
         id="add_to_cart_modal"
         addToCartModal={() => handleAddToCartModal()}

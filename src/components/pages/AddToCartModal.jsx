@@ -97,7 +97,7 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
             className="input input-bordered w-full max-w-xs"
           />
 
-          {products.some((product) => product.category_id !== 1) && (
+          {products.some((product) => product.category_id === 1) && (
             <div>
               <div>
                 <label className="block mt-5 mb-3 font-bold">Mleko</label>
