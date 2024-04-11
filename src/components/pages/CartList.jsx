@@ -15,8 +15,6 @@ const CartList = () => {
         const response = await axios.get("http://localhost:5000/cart");
         setProducts(response.data);
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
-        var cartProducts = response.data;
-        console.log("dupa1", cartProducts.product_price)
       } catch (error) {
         console.error(error);
       }
