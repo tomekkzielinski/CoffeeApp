@@ -4,7 +4,7 @@ import axios from "axios";
 import Alert from "./Alert";
 
 const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
   const [products, setProducts] = useState([]);
   const [answerMilk, setAnswerMilk] = useState(undefined);

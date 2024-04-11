@@ -5,15 +5,18 @@ import CartComponents from "./CartComponents";
 const CartList = () => {
   const [products, setProducts] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
+  const [amount, setAmount] = useState(0);
+
 
   useEffect(() => {
-    const fetchCartProducts = async (cartProducts) => {
+
+    const fetchCartProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/cart");
         setProducts(response.data);
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
         var cartProducts = response.data;
-       
+        console.log("dupa1", cartProducts.product_price)
       } catch (error) {
         console.error(error);
       }
@@ -23,7 +26,19 @@ const CartList = () => {
   }, []);
 
 
+  useEffect(() => {
+    // Obliczanie sumy cen produktów w koszyku po każdej zmianie cartProducts
+    if (cartProducts.length > 0) {
+      const totalPrice = cartProducts.reduce((total, product) => {
+        return total + (product.product_price * product.quantity);
+      }, 0);
+      setAmount(totalPrice.toFixed(2)); // Zaokrąglenie do dwóch miejsc po przecinku
+    } else {
+      setAmount(0);
+    }
+  }, [cartProducts]);
 
+ 
   return (
     <div className="text-xl">
       <table className="table">
@@ -61,7 +76,7 @@ const CartList = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end font-bold items-center mx-auto mt-20">Suma: 125.45</div>
+      <div class="total" className="flex justify-end font-bold items-center mx-auto mt-20">Suma: {amount}</div>
       <div className="flex justify-center items-center mx-auto mt-20">
         
         <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">

@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <nav>
-      <Link to="/" className="title">
+      <Link to="/main-page" className="title">
         <img src="../../coffee-logo-1.png" alt="Coffee-App Logo" />
       </Link>
 
