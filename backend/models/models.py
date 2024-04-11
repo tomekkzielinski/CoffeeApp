@@ -37,3 +37,12 @@ class Cart(Base):
     # user = relationship("User", back_populates="carts") # Jeśli masz model User
     
 Product.carts = relationship("Cart", back_populates="product")
+
+class Order(Base):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True)
+    session_id = Column(String, ForeignKey('cart.session_id'))
+    total_price = Column(Float)
+
+    # Relacje
+    cart = relationship("Cart")
