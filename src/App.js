@@ -9,6 +9,7 @@ import Cart from "./components/pages/Cart";
 import AddProduct from "./components/pages/AddProduct";
 import Footer from "./components/pages/Footer";
 import MainPageCard from "./components/pages/MainPageCard";
+import OrderFinished from "./components/pages/OrderFinished";
 
 function App() {
   // Funkcja do ustawiania wartości pliku cookie
@@ -57,6 +58,7 @@ if (sessionId == "") {
         <Route path="/cart" element={<Cart />}></Route>
        <Route path="/add-product" element={<AddProduct />}></Route>
         <Route path="/main-page" element={<MainPageCard />}></Route>
+        <Route path="/services" element={<OrderFinished />}></Route>
       </Routes>
       
       </div>

@@ -7,9 +7,59 @@ const CartList = () => {
   const [cartProducts, setCartProducts] = useState([]);
   const [amount, setAmount] = useState(0);
 
+  // Funkcja do pobierania wartości pliku cookie po nazwie
+  function getCookie(cookieName) {
+    var name = cookieName + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var cookieArray = decodedCookie.split(";");
+    for (var i = 0; i < cookieArray.length; i++) {
+      var cookie = cookieArray[i];
+      while (cookie.charAt(0) == " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) == 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return "";
+  }
+
+  function cartNotEmpty(amount) {
+    // Sprawdzamy, czy wartość amount (całkowita cena zamówienia) jest większa od zera
+    if (amount > 0) {
+      return true; // Zwracamy true, jeśli koszyk nie jest pusty
+    } else {
+      return false; // Zwracamy false, jeśli koszyk jest pusty
+    }
+  }
+
+  function handleOrderSubmission() {
+    const session_id = getCookie("sessionId"); // Pobierz session_id z ciasteczka
+    const orderData = {
+      session_id: session_id,
+      total_price: amount,
+    };
+
+    if (cartNotEmpty(amount)) {
+      // Wysyłamy żądanie POST tylko jeśli koszyk nie jest pusty
+      axios
+        .post("http://localhost:5000/orders", orderData)
+        .then((response) => {
+          console.log("Zamówienie zostało dodane:", response.data);
+          // Dodatkowy kod, który wykonasz po pomyślnym dodaniu zamówienia
+          // ...
+        })
+        .catch((error) => {
+          console.error("Błąd podczas dodawania zamówienia:", error);
+          // Dodatkowy kod, który wykonasz w przypadku błędu
+          // ...
+        });
+    } else {
+      alert("Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia.");
+    }
+  }
 
   useEffect(() => {
-
     const fetchCartProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/cart");
@@ -23,12 +73,11 @@ const CartList = () => {
     fetchCartProducts();
   }, []);
 
-
   useEffect(() => {
     // Obliczanie sumy cen produktów w koszyku po każdej zmianie cartProducts
     if (cartProducts.length > 0) {
       const totalPrice = cartProducts.reduce((total, product) => {
-        return total + (product.product_price * product.quantity);
+        return total + product.product_price * product.quantity;
       }, 0);
       setAmount(totalPrice.toFixed(2)); // Zaokrąglenie do dwóch miejsc po przecinku
     } else {
@@ -36,7 +85,6 @@ const CartList = () => {
     }
   }, [cartProducts]);
 
- 
   return (
     <div className="text-xl">
       <table className="table">
@@ -69,22 +117,21 @@ const CartList = () => {
               description={product.description}
               image={product.product_image}
               quantity={product.quantity}
-              
             />
           ))}
         </tbody>
       </table>
-      <div class="total" className="flex justify-end font-bold items-center mx-auto mt-20">Suma: {amount}</div>
+      <div
+        class="total"
+        className="flex justify-end font-bold items-center mx-auto mt-20"
+      >
+        Suma: {amount}
+      </div>
       <div className="flex justify-center items-center mx-auto mt-20">
-        
-        <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
+        <button onClick={handleOrderSubmission} className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
           Zamów i zapłać przy kasie
         </button>
-        
       </div>
-      
-
-
     </div>
   );
 };

@@ -6,7 +6,7 @@ const MainPageCard = () => {
   const mainCardsData = [
     {
       card_id: 1,
-      description: "Zamów kawę u teraz i otrzymaj 10% rabatu :)",
+      description: "Zamów kawę już teraz i otrzymaj 10% rabatu :)",
       topic: "Zamów kawę!",
       image_path: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5mtxu6YLj55LApYP8EcHoL8p_sezWFwE11A&s",
       button_desc: "Przejdź do menu"
