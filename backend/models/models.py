@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+
 class Category(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
@@ -43,6 +44,11 @@ class Order(Base):
     id = Column(Integer, primary_key=True)
     session_id = Column(String, ForeignKey('cart.session_id'))
     total_price = Column(Float)
+    product_id = Column(Integer)
+    quantity = Column(Integer)
+    order_id = Column(String) 
 
     # Relacje
     cart = relationship("Cart")
+
+    

@@ -130,24 +130,57 @@ def remove_from_cart(cart_id):
     finally:
         session.close()
 
-# Endpoint do dodawania zamówień
 @app.route('/orders', methods=['POST'])
 def add_order():
-    session = get_session()
+    session = Session()
     try:
+        # Pobranie danych z JSON
         data = request.get_json()
+        
+        # Utworzenie nowego zamówienia
         new_order = Order(
+            order_id="O-{}".format(data['session_id']),  # Przykładowe generowanie order_id
             session_id=data['session_id'],
+            product_id=data['product_id'],
+            quantity=data['quantity'],
             total_price=data['total_price']
         )
+        
+        # Dodanie i zatwierdzenie zamówienia w bazie danych
         session.add(new_order)
         session.commit()
-        return jsonify({'message': 'Order added successfully', 'order_id': new_order.id}), 201
+        
+        # Zwrócenie informacji o sukcesie wraz z order_id
+        return jsonify({'message': 'Order added successfully', 'order_id': new_order.order_id}), 201
     except Exception as e:
+        # Obsługa wyjątków z rollbackiem w przypadku błędu
         session.rollback()
         return jsonify({'error': str(e)}), 400
     finally:
+        # Zamknięcie sesji
         session.close()
+
+
+
+# # Endpoint do dodawania zamówień
+# @app.route('/orders', methods=['POST'])
+# def add_order():
+#     session = get_session()
+#     try:
+#         data = request.get_json()
+#         new_order = Order(
+#             session_id=data['session_id'],
+#             total_price=data['total_price']
+#         )
+#         session.add(new_order)
+#         session.commit()
+#         return jsonify({'message': 'Order added successfully', 'order_id': new_order.id}), 201
+#     except Exception as e:
+#         session.rollback()
+#         return jsonify({'error': str(e)}), 400
+#     finally:
+#         session.close()
+
 
 # Endpoint powitalny
 @app.route('/')
