@@ -14,13 +14,12 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-
     const fetchCartProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/cart");
         setProducts(response.data);
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
-        var cartItems = (response.data);
+        var cartItems = response.data;
         console.log("test-nav", cartItems);
       } catch (error) {
         console.error(error);
@@ -34,9 +33,9 @@ const Navbar = () => {
     // Obliczanie ilości produktów w koszyku
     if (cartProducts.length > 0) {
       const totalPrice = cartProducts.reduce((total, product) => {
-        return total + (product.quantity);
+        return total + product.quantity;
       }, 0);
-      setAmount(totalPrice.toFixed(0)); 
+      setAmount(totalPrice.toFixed(0));
     } else {
       setAmount(0);
     }
@@ -55,6 +54,9 @@ const Navbar = () => {
       </div>
       <ul className={menuOpen ? "open" : ""}>
         <li>
+          <NavLink to="orders">Zamówienia</NavLink>
+        </li>
+        <li>
           <NavLink to="add-product">Dodaj produkt</NavLink>
         </li>
         <li>
@@ -67,7 +69,9 @@ const Navbar = () => {
           <NavLink to="login">Logowanie</NavLink>
         </li>
         <li>
-          <NavLink to="cart">Koszyk <b>({amount})</b></NavLink>
+          <NavLink to="cart">
+            Koszyk <b>({amount})</b>
+          </NavLink>
         </li>
       </ul>
     </nav>

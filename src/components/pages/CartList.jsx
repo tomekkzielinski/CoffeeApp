@@ -57,7 +57,7 @@ const CartList = () => {
     } else {
       alert("Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia.");
     }
-  }
+  };
 
   useEffect(() => {
     const fetchCartProducts = async () => {
