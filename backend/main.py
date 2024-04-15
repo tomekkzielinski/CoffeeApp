@@ -3,10 +3,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_cors import CORS
 from backend.models.models import Base, Product, Cart, Order  # Załóżmy, że wszystkie modele są zdefiniowane w tym module
-
+import random
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  # Ustawiłem '*' dla origins, dla uproszczenia dostępu
+
 
 # Konfiguracja silnika bazy danych SQLAlchemy
 engine = create_engine('sqlite:///coffeeapp.db', echo=True)
@@ -18,6 +19,11 @@ Session = sessionmaker(bind=engine)
 # Funkcja pomocnicza do zarządzania sesjami
 def get_session():
     return Session()
+
+def generate_order_id():
+    # Generowanie losowego ID z zakresu 100-999
+    random_id = random.randint(100, 999)
+    return random_id
 
 # Endpoint do dodawania produktów
 @app.route('/products', methods=['POST'])
@@ -132,32 +138,47 @@ def remove_from_cart(cart_id):
 
 @app.route('/orders', methods=['POST'])
 def add_order():
-    session = Session()
+    session = get_session()
     try:
-        # Pobranie danych z JSON
         data = request.get_json()
+        session_id = data.get('session_id')
+
+        if not session_id:
+            return jsonify({'error': 'Missing session_id'}), 400
+
+        cart_items = session.query(Cart).filter_by(session_id=session_id).all()
         
-        # Utworzenie nowego zamówienia
-        new_order = Order(
-            order_id="O-{}".format(data['session_id']),  # Przykładowe generowanie order_id
-            session_id=data['session_id'],
-            product_id=data['product_id'],
-            quantity=data['quantity'],
-            total_price=data['total_price']
-        )
+        if not cart_items:
+            return jsonify({'error': 'Cart is empty'}), 400
+
+        orders = []
+        for cart_item in cart_items:
+            product = session.query(Product).filter_by(id=cart_item.product_id).first()
+            new_order = Order(
+                order_id = format(generate_order_id()),
+                session_id=data['session_id'],
+                product_id=cart_item.product_id,
+                quantity=cart_item.quantity,
+                total_price=data['amount']
+            )
+            orders.append(new_order)
         
-        # Dodanie i zatwierdzenie zamówienia w bazie danych
-        session.add(new_order)
+        session.add_all(orders)
+        session.query(Cart).filter_by(session_id=session_id).delete()
         session.commit()
+
+        # Generowanie nowego session_id po złożeniu zamówienia
+        new_session_id = generate_session_id()
         
-        # Zwrócenie informacji o sukcesie wraz z order_id
-        return jsonify({'message': 'Order added successfully', 'order_id': new_order.order_id}), 201
+        return jsonify({
+            'message': 'Order added successfully', 
+            'order_ids': [order.order_id for order in orders],
+            'new_session_id': new_session_id
+        }), 201
     except Exception as e:
-        # Obsługa wyjątków z rollbackiem w przypadku błędu
         session.rollback()
         return jsonify({'error': str(e)}), 400
     finally:
-        # Zamknięcie sesji
         session.close()
 
 

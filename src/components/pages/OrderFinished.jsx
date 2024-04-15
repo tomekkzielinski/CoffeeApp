@@ -3,6 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 const OrderFinished = () => {
   const navigate = useNavigate();
+
+
+  const redirectAfter10Second = () => {
+    setTimeout(() => {
+      navigate('/menu');
+    }, 5000);
+  };
+  React.useEffect(() => {
+    redirectAfter10Second();
+  }, []);
   return (
     <div className="hero min-h-screen bg-base-200">
   <div className="hero-content flex-col lg:flex-row-reverse">

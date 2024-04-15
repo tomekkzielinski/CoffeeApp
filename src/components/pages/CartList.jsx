@@ -35,11 +35,12 @@ const CartList = () => {
 
   function handleOrderSubmission() {
     const session_id = getCookie("sessionId"); // Pobierz session_id z ciasteczka
+    console.log("sesje", session_id)
     const orderData = {
       session_id: session_id,
-      total_price: amount,
+      amount: amount
     };
-
+    console.log("dsadad", amount)
     if (cartNotEmpty(amount)) {
       // Wysyłamy żądanie POST tylko jeśli koszyk nie jest pusty
       axios
