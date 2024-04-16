@@ -38,9 +38,9 @@ const CartList = () => {
     console.log("sesje", session_id)
     const orderData = {
       session_id: session_id,
-      amount: amount
+      total_price: amount
     };
-    console.log("dsadad", amount)
+    console.log("dsadad", orderData)
     if (cartNotEmpty(amount)) {
       // Wysyłamy żądanie POST tylko jeśli koszyk nie jest pusty
       axios
@@ -50,11 +50,6 @@ const CartList = () => {
           // Dodatkowy kod, który wykonasz po pomyślnym dodaniu zamówienia
           // ...
         })
-        .catch((error) => {
-          console.error("Błąd podczas dodawania zamówienia:", error);
-          // Dodatkowy kod, który wykonasz w przypadku błędu
-          // ...
-        });
     } else {
       alert("Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia.");
     }
