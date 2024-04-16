@@ -212,6 +212,23 @@ def get_orders():
         # Zamknij sesję
         session.close()
 
+@app.route('/orders/<string:session_id>', methods=['DELETE'])
+def delete_orders_by_session(session_id):
+    session = get_session()
+    try:
+        # Znajdź zamówienia do usunięcia z daną session_id
+        orders_to_delete = session.query(Order).filter_by(session_id=session_id).all()
+        if orders_to_delete:
+            for order in orders_to_delete:
+                session.delete(order)
+            session.commit()
+            return jsonify({'message': f'Orders with session_id {session_id} deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'No orders found with the given session_id'}), 404
+    except Exception as e:
+        session.rollback()
+       
+
 
 
 
