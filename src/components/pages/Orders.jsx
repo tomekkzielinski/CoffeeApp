@@ -25,22 +25,36 @@ const Orders = () => {
     orders.forEach(order => {
       const sessionId = order.session_id;
       if (!groupedOrders[sessionId]) {
-        groupedOrders[sessionId] = [];
+        groupedOrders[sessionId] = {
+          products: [],
+          totalPrice: 0
+        };
       }
-      groupedOrders[sessionId].push(order.product_id);
+      groupedOrders[sessionId].products.push({
+        name: order.product_name,
+        quantity: order.quantity
+      });
+      groupedOrders[sessionId].totalPrice += order.total_price;
     });
     return groupedOrders;
   };
 
   return (
     <div className="mt-5">
-      {Object.entries(groupedOrders).map(([sessionId, productIds]) => (
+      {Object.entries(groupedOrders).map(([sessionId, { products, totalPrice }]) => (
         <div key={sessionId} className="card w-96 bg-primary text-primary-content">
           <div className="card-body">
             <h2 className="card-title">Session ID: {sessionId}</h2>
-            <p>Product IDs: {productIds.join(", ")}</p>
+            {products.map((product, index) => (
+              <div key={index}>
+                <p>
+                  Product Name: {product.name} x {product.quantity}
+                </p>
+              </div>
+            ))}
+            <p>Total Price: ${totalPrice}</p>
             <div className="card-actions justify-end">
-              <button className="btn">Buy Now</button>
+              <button className="btn">Zrealizowano</button>
             </div>
           </div>
         </div>

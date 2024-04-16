@@ -21,6 +21,7 @@ const OrderFinished = () => {
       <h1 className="text-5xl font-bold">Dziękujemy za złożenie zamówienia!</h1>
       <p className="py-6 text-3xl ">Numer zamówienia: 123</p>
       <p className="py-6 text-3xl ">Prosimy o podejście do kasy i opłacenie zamówienia</p>
+      <p className="py-6 text-3xl ">Do zapłaty: 99.99</p>
       <button onClick={() => navigate('/menu')} className="text-white btn h-20 w-100 bg-buttons-color">Przejdź do Menu głównego</button>
     </div>
   </div>
