@@ -43,11 +43,12 @@ class Order(Base):
     id = Column(Integer, primary_key=True)
     session_id = Column(String, ForeignKey('cart.session_id'))
     total_price = Column(Float)
-    product_id = Column(Integer)
+    product_id = Column(Integer, ForeignKey('products.id'))
     quantity = Column(Integer)
     order_id = Column(String) 
 
     # Relacje
     cart = relationship("Cart")
+    product = relationship("Product")
 
     

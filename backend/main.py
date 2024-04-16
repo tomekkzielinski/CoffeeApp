@@ -191,10 +191,12 @@ def get_orders():
         orders_data = []
         for order in orders:
             # Dla każdego zamówienia stwórz słownik z jego danymi
+            product_name = order.product.name if order.product else None
             order_data = {
                 'order_id': order.order_id,
                 'session_id': order.session_id,
                 'product_id': order.product_id,
+                'product_name': product_name,  # Dodajemy nazwę produktu
                 'quantity': order.quantity,
                 'total_price': order.total_price
             }
