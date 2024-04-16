@@ -8,7 +8,7 @@ const OrderFinished = () => {
   const redirectAfter10Second = () => {
     setTimeout(() => {
       navigate('/menu');
-    }, 5000);
+    }, 7000);
   };
   React.useEffect(() => {
     redirectAfter10Second();

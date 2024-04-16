@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CartComponents from "./CartComponents";
+import { Link, NavLink } from "react-router-dom";
 
 const CartList = () => {
   const [products, setProducts] = useState([]);
@@ -41,6 +42,7 @@ const CartList = () => {
       session_id: session_id,
       amount: amount
     };
+
     console.log("dsadad", orderData)
     if (cartNotEmpty(amount)) {
       // Wysyłamy żądanie POST tylko jeśli koszyk nie jest pusty
@@ -50,6 +52,7 @@ const CartList = () => {
           console.log("Zamówienie zostało dodane:", response.data);
           // Dodatkowy kod, który wykonasz po pomyślnym dodaniu zamówienia
           // ...
+  
         })
         .catch((error) => {
           console.error("Błąd podczas dodawania zamówienia:", error);
@@ -124,15 +127,17 @@ const CartList = () => {
         </tbody>
       </table>
       <div
-        class="total"
+        
         className="flex justify-end font-bold items-center mx-auto mt-20"
       >
         Suma: {amount}
       </div>
       <div className="flex justify-center items-center mx-auto mt-20">
+      <Link to="/services" className="title">
         <button onClick={handleOrderSubmission} className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
           Zamów i zapłać przy kasie
         </button>
+      </Link>
       </div>
     </div>
   );
