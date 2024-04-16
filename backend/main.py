@@ -182,6 +182,40 @@ def add_order():
     finally:
         session.close()
 
+@app.route('/orders', methods=['GET'])
+def get_orders():
+    session = get_session()
+    try:
+        orders = session.query(Order).all()  # Pobierz wszystkie obiekty zamówienia
+        orders_data = []
+        for order in orders:
+            # Dla każdego zamówienia stwórz słownik z jego danymi
+            order_data = {
+                'order_id': order.order_id,
+                'session_id': order.session_id,
+                'product_id': order.product_id,
+                'quantity': order.quantity,
+                'total_price': order.total_price
+            }
+            # Dodaj słownik do listy orders_data
+            orders_data.append(order_data)
+
+        # Zwróć listę zamówień jako JSON
+        return jsonify(orders_data)
+    except Exception as e:
+        # W przypadku błędu, zwróć wiadomość o błędzie
+        return jsonify({'error': str(e)}), 500
+    finally:
+        # Zamknij sesję
+        session.close()
+
+
+
+
+
+
+
+
 
 
 # # Endpoint do dodawania zamówień
