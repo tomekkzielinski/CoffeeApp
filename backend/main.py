@@ -141,7 +141,9 @@ def add_order():
     session = get_session()
     try:
         data = request.get_json()
+        print(f"Received data: {data}")
         session_id = data.get('session_id')
+        amount = data.get('amount')
 
         if not session_id:
             return jsonify({'error': 'Missing session_id'}), 400
@@ -159,7 +161,7 @@ def add_order():
                 session_id=data['session_id'],
                 product_id=cart_item.product_id,
                 quantity=cart_item.quantity,
-                total_price=data['amount']
+                total_price=float(amount)
             )
             orders.append(new_order)
         
@@ -168,12 +170,11 @@ def add_order():
         session.commit()
 
         # Generowanie nowego session_id po złożeniu zamówienia
-        new_session_id = generate_session_id()
+        
         
         return jsonify({
             'message': 'Order added successfully', 
-            'order_ids': [order.order_id for order in orders],
-            'new_session_id': new_session_id
+            'order_ids': [order.order_id for order in orders]
         }), 201
     except Exception as e:
         session.rollback()

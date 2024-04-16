@@ -36,9 +36,10 @@ const CartList = () => {
   function handleOrderSubmission() {
     const session_id = getCookie("sessionId"); // Pobierz session_id z ciasteczka
     console.log("sesje", session_id)
+    console.log("cena w dupe jeza", amount)
     const orderData = {
       session_id: session_id,
-      total_price: amount
+      amount: amount
     };
     console.log("dsadad", orderData)
     if (cartNotEmpty(amount)) {
@@ -50,6 +51,11 @@ const CartList = () => {
           // Dodatkowy kod, który wykonasz po pomyślnym dodaniu zamówienia
           // ...
         })
+        .catch((error) => {
+          console.error("Błąd podczas dodawania zamówienia:", error);
+          // Dodatkowy kod, który wykonasz w przypadku błędu
+          // ...
+        });
     } else {
       alert("Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia.");
     }
