@@ -4,6 +4,14 @@ from sqlalchemy.orm import sessionmaker
 from flask_cors import CORS
 from backend.models.models import Base, Product, Cart, Order  # Załóżmy, że wszystkie modele są zdefiniowane w tym module
 import random
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from functools import wraps
+
+
+
+
+
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  # Ustawiłem '*' dla origins, dla uproszczenia dostępu
@@ -25,8 +33,48 @@ def generate_order_id():
     random_id = random.randint(100, 999)
     return random_id
 
+def set_password(password):
+    return generate_password_hash(password)
+
+def check_password(hashed_password, password):
+    return check_password_hash(hashed_password, password)
+
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    session = get_session()
+    user = session.query(User).filter_by(username=username).first()
+    if user and check_password(user.password_hash, password):
+        login_user(user)
+        return jsonify({'message': 'Logged in successfully'}), 200
+    return jsonify({'error': 'Invalid username or password'}), 401
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'Logged out successfully'}), 200
+
+@login_manager.user_loader
+def load_user(user_id):
+    session = get_session()
+    return session.query(User).get(int(user_id))
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.username != 'admin':
+            return jsonify({'error': 'Authorization required'}), 403
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Endpoint do dodawania produktów
 @app.route('/products', methods=['POST'])
+@admin_required
 def add_product():
     session = get_session()
     try:
@@ -228,36 +276,7 @@ def delete_orders_by_session(session_id):
     except Exception as e:
         session.rollback()
        
-
-
-
-
-
-
-
-
-
-
-# # Endpoint do dodawania zamówień
-# @app.route('/orders', methods=['POST'])
-# def add_order():
-#     session = get_session()
-#     try:
-#         data = request.get_json()
-#         new_order = Order(
-#             session_id=data['session_id'],
-#             total_price=data['total_price']
-#         )
-#         session.add(new_order)
-#         session.commit()
-#         return jsonify({'message': 'Order added successfully', 'order_id': new_order.id}), 201
-#     except Exception as e:
-#         session.rollback()
-#         return jsonify({'error': str(e)}), 400
-#     finally:
-#         session.close()
-
-
+       
 # Endpoint powitalny
 @app.route('/')
 def hello():
