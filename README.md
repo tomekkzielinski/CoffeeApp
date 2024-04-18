@@ -20,6 +20,7 @@ python -m backend.main
 
 4.instalacja flaska
 pip install flask
+pip install flask-login
 
 5. Instalacja sqlalchemy
 pip install sqlalchemy

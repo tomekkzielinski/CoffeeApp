@@ -38,20 +38,25 @@ const Orders = () => {
     });
     return groupedOrders;
   };
-
-
-console.log()
   const handleDelete = (session_id) => {
+    console.log("Session ID to delete:", session_id);  // Dodaj logowanie, aby sprawdzić przekazywaną wartość
 
-    axios.delete(`http://localhost:5000/orders/${session_id}`)
-      .then(response => {
-        console.log(response.data);
-        setDeleted(true);
-      })
-      .catch(error => {
-        console.error('Error deleting orders:', error);
-      });
-  };
+    // Sprawdź, czy session_id jest poprawnie przekazywane i jest stringiem
+    if (typeof session_id === 'string') {
+        axios.delete(`http://localhost:5000/orders/${session_id}`)
+            .then(response => {
+                console.log('Response:', response.data);
+                const updatedOrders = {...groupedOrders};
+                delete updatedOrders[session_id];
+                setGroupedOrders(updatedOrders);
+            })
+            .catch(error => {
+                console.error('Error deleting orders:', error);
+            });
+    } else {
+        console.error("Invalid session_id type:", typeof session_id);
+    }
+};
   
 
   return (
@@ -69,9 +74,9 @@ console.log()
             ))}
             <p className="text-2xl font-bold mt-5">Total Price: ${totalPrice}</p>
             <div className="grid justify-items-end">
-            <button className="btn bg-buttons-color text-white" onClick={handleDelete} disabled={deleted}>
-      {deleted ? 'Zrealizowano' : 'Usuń zamówienia'}
-    </button>
+            <button className="btn bg-buttons-color text-white" onClick={() => handleDelete(sessionId)} disabled={deleted}>
+    {deleted ? 'Zrealizowano' : 'Usuń zamówienia'}
+</button>
             </div>
           </div>
         </div>
