@@ -25,6 +25,8 @@ const CartList = () => {
     return "";
   }
 
+
+
   function cartNotEmpty(amount) {
     // Sprawdzamy, czy wartość amount (całkowita cena zamówienia) jest większa od zera
     if (amount > 0) {
@@ -34,16 +36,18 @@ const CartList = () => {
     }
   }
 
+
   function handleOrderSubmission() {
+    
     const session_id = getCookie("sessionId"); // Pobierz session_id z ciasteczka
-    console.log("sesje", session_id)
-    console.log("cena w dupe jeza", amount)
     const orderData = {
       session_id: session_id,
       amount: amount
     };
+        
 
-    console.log("dsadad", orderData)
+
+
     if (cartNotEmpty(amount)) {
       // Wysyłamy żądanie POST tylko jeśli koszyk nie jest pusty
       axios
@@ -62,6 +66,7 @@ const CartList = () => {
     } else {
       alert("Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia.");
     }
+   
   };
 
   useEffect(() => {

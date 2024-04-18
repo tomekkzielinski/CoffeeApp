@@ -1,18 +1,64 @@
-import React from 'react'
+
 import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const OrderFinished = () => {
   const navigate = useNavigate();
 
+    // Funkcja do ustawiania ciasteczka
+    function setCookie(name, value, days = 1) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    };
+    function generateNewSessionId() {
+      // Tutaj możesz wygenerować nowe ID sesji, np. losując unikalny identyfikator
+      return Math.floor(Math.random() * 1000) + 1;
+    };
 
-  const redirectAfter10Second = () => {
-    setTimeout(() => {
+    function resetSessionId() { 
+      const newSessionId  = generateNewSessionId();
+      setCookie("sessionId", newSessionId);
+    };
+
+  async function fetchOrdersFromBackend() {
+    const url = 'http://localhost:5000/orders'; // Zmień adres na odpowiedni
+  
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const ordersData = await response.json();
+        return ordersData;
+      } else {
+        console.error(`Nie udało się pobrać danych. Kod statusu: ${response.status}`);
+        return null;
+      }
+    } catch (error) {
+      console.error(`Wystąpił błąd podczas wysyłania żądania: ${error}`);
+      return null;
+    }
+  }
+  
+  // Przykładowe użycie
+  fetchOrdersFromBackend()
+    .then((orders) => {
+      if (orders) {
+        orders.forEach((order) => {
+          console.log(order);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(`Wystąpił błąd: ${error}`);
+    });
+  
+    fetchOrdersFromBackend()
+
+  const redirect= () => {
+    resetSessionId()
       navigate('/menu');
-    }, 7000);
   };
-  React.useEffect(() => {
-    redirectAfter10Second();
-  }, []);
   return (
     <div className="hero min-h-screen bg-base-200">
   <div className="hero-content flex-col lg:flex-row-reverse">
@@ -22,7 +68,7 @@ const OrderFinished = () => {
       <p className="py-6 text-3xl ">Numer zamówienia: 123</p>
       <p className="py-6 text-3xl ">Prosimy o podejście do kasy i opłacenie zamówienia</p>
       <p className="py-6 text-3xl ">Do zapłaty: 99.99</p>
-      <button onClick={() => navigate('/menu')} className="text-white btn h-20 w-100 bg-buttons-color">Przejdź do Menu głównego</button>
+      <button onClick={() => redirect('/menu')} className="text-white btn h-20 w-100 bg-buttons-color">Powrót do MENU</button>
     </div>
   </div>
 </div>

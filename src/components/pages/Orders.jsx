@@ -3,7 +3,7 @@ import axios from "axios";
 
 const Orders = () => {
   const [groupedOrders, setGroupedOrders] = useState([]);
-
+  const [deleted, setDeleted] = useState(false);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -39,12 +39,27 @@ const Orders = () => {
     return groupedOrders;
   };
 
+
+console.log()
+  const handleDelete = (session_id) => {
+
+    axios.delete(`http://localhost:5000/orders/${session_id}`)
+      .then(response => {
+        console.log(response.data);
+        setDeleted(true);
+      })
+      .catch(error => {
+        console.error('Error deleting orders:', error);
+      });
+  };
+  
+
   return (
-    <div className="mt-5">
+    <div className="m-10 flex flex-row flex-wrap">
       {Object.entries(groupedOrders).map(([sessionId, { products, totalPrice }]) => (
-        <div key={sessionId} className="card w-96 bg-primary text-primary-content">
+        <div key={sessionId} className=" m-5 card w-96 bg-main-color text-font-color">
           <div className="card-body">
-            <h2 className="card-title">Session ID: {sessionId}</h2>
+            <h2 className="card-title text-lg justify-center mb-10 font-bold">Numer zamówienia: {sessionId}</h2>
             {products.map((product, index) => (
               <div key={index}>
                 <p>
@@ -52,9 +67,11 @@ const Orders = () => {
                 </p>
               </div>
             ))}
-            <p>Total Price: ${totalPrice}</p>
-            <div className="card-actions justify-end">
-              <button className="btn">Zrealizowano</button>
+            <p className="text-2xl font-bold mt-5">Total Price: ${totalPrice}</p>
+            <div className="grid justify-items-end">
+            <button className="btn bg-buttons-color text-white" onClick={handleDelete} disabled={deleted}>
+      {deleted ? 'Zrealizowano' : 'Usuń zamówienia'}
+    </button>
             </div>
           </div>
         </div>

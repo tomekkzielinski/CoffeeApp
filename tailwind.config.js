@@ -17,7 +17,8 @@ module.exports = {
       'gray': '#8492a6',
       'gray-light': '#d3dce6',
       'main-color': '#FFE5CF',
-      'buttons-color': '#624E2D'
+      'buttons-color': '#624E2D',
+      'font-color': '#1F2937'
     },
   },
   plugins: [require("daisyui")],
