@@ -6,10 +6,11 @@ import  AddToCartModal  from "./AddToCartModal";
 
 import Alert from "./Alert";
 
-const Menu = () => {
+const Menu = ({isLoggedIn}) => {
   const [products, setProducts] = useState([]);
   const [productIdToDelete, setProductIdToDelete] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -45,9 +46,10 @@ const Menu = () => {
   };
  
   
-  const handleAddToCartModal = async (productId) => {
+  const handleAddToCartModal = async (productId, categoryId) => {
     console.log({productId});
     setSelectedProductId(productId);
+    setSelectedCategoryId(categoryId);
     document.getElementById("add_to_cart_modal").showModal();
   };
 
@@ -57,6 +59,7 @@ const Menu = () => {
         id="add_to_cart_modal"
         addToCartModal={() => handleAddToCartModal()}
         selectedProductId={selectedProductId}
+        selectedCategoryId={selectedCategoryId}
         resetSelectedProduct={() => setSelectedProductId(null)}
         products={products}
       />
@@ -70,6 +73,7 @@ const Menu = () => {
       <p className="text-4xl font-bold ml-4 mt-6">Kawa:</p>
       <div className="flex justify-center items-center">
         <Product
+          isLoggedIn={isLoggedIn}
           products={products.filter((product) => product.category_id === 1)}
           onDelete={handleDelete}
           handleAddToCart={handleAddToCartModal}

@@ -41,10 +41,12 @@ nav ul li a {
   margin: 0 0.5rem;
   border-radius: 0.5rem;
   font-size: 1.5rem;
+
 }
 
 nav ul li a:not(.active):hover {
   background-color: #544326;
+  cursor: pointer;
   
 }
 
@@ -94,5 +96,6 @@ nav .menu span {
 
   nav ul li a { 
     margin: 0.2rem 0.5rem;
+    cursor: pointer;
   }
 }

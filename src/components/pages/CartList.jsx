@@ -25,8 +25,6 @@ const CartList = () => {
     return "";
   }
 
-
-
   function cartNotEmpty(amount) {
     // Sprawdzamy, czy wartość amount (całkowita cena zamówienia) jest większa od zera
     if (amount > 0) {
@@ -36,17 +34,12 @@ const CartList = () => {
     }
   }
 
-
   function handleOrderSubmission() {
-    
     const session_id = getCookie("sessionId"); // Pobierz session_id z ciasteczka
     const orderData = {
       session_id: session_id,
-      amount: amount
+      amount: amount,
     };
-        
-
-
 
     if (cartNotEmpty(amount)) {
       // Wysyłamy żądanie POST tylko jeśli koszyk nie jest pusty
@@ -56,7 +49,6 @@ const CartList = () => {
           console.log("Zamówienie zostało dodane:", response.data);
           // Dodatkowy kod, który wykonasz po pomyślnym dodaniu zamówienia
           // ...
-  
         })
         .catch((error) => {
           console.error("Błąd podczas dodawania zamówienia:", error);
@@ -64,9 +56,20 @@ const CartList = () => {
           // ...
         });
     } else {
-      alert("Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia.");
+      alert(
+        "Koszyk jest pusty. Proszę dodać produkty przed złożeniem zamówienia."
+      );
     }
-   
+  }
+  const removeFromCart = async (cartId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/cart/${cartId}`);
+      setCartProducts((prev) =>
+        prev.filter((product) => (product.cart_id !== cartId))
+      );
+    } catch (error) {
+      console.error("There was an error removing the cart item!", error);
+    }
   };
 
   useEffect(() => {
@@ -119,7 +122,7 @@ const CartList = () => {
         <tbody>
           {cartProducts.map((product, index) => (
             <CartComponents
-              cartId={product.cart_id}
+              handleRemove={() => removeFromCart(product.cart_id)}
               id={product.product_id} // Poprawione przekazywanie id produktu
               key={`${product.id}-${index}`}
               name={product.product_name} // Poprawione przekazywanie nazwy produktu
@@ -131,18 +134,18 @@ const CartList = () => {
           ))}
         </tbody>
       </table>
-      <div
-        
-        className="flex justify-end font-bold items-center mx-auto mt-20"
-      >
+      <div className="flex justify-end font-bold items-center mx-auto mt-20">
         Suma: {amount}
       </div>
       <div className="flex justify-center items-center mx-auto mt-20">
-      <Link to="/services" className="title">
-        <button onClick={handleOrderSubmission} className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20">
-          Zamów i zapłać przy kasie
-        </button>
-      </Link>
+        <Link to="/services" className="title">
+          <button
+            onClick={handleOrderSubmission}
+            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20"
+          >
+            Zamów i zapłać przy kasie
+          </button>
+        </Link>
       </div>
     </div>
   );

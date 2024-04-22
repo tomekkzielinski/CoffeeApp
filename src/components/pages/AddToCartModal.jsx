@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 
-const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
+const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedProduct }) => {
   const [quantity, setQuantity] = useState(1);
   const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
-  const [products, setProducts] = useState([]);
   const [answerMilk, setAnswerMilk] = useState(undefined);
   const [answerSugar, setAnswerSugar] = useState(false);
 
@@ -21,19 +20,7 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
     }, 900); // 900ms to czas trwania animacji zamykania modala
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/products");
-        setProducts(response.data);
-        console.log("produkty z dupy", products);
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
-    fetchProducts();
-  }, []);
 
   function getCookie(cookieName) {
     var name = cookieName + "=";
@@ -97,7 +84,7 @@ const AddToCartModal = ({ selectedProductId, resetSelectedProduct }) => {
             className="input input-bordered w-full max-w-xs"
           />
 
-          {products.some((product) => product.category_id === 1) && (
+          {selectedCategoryId === 1 && (
             <div>
               <div>
                 <label className="block mt-5 mb-3 font-bold">Mleko</label>

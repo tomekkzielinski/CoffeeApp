@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-
-const LoginForm = () => {
+import { useNavigate } from 'react-router-dom';
+const LoginForm = ( {onLogin}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,7 +22,9 @@ const LoginForm = () => {
     const data = await response.json();
     if (response.ok) {
       console.log('Logged in successfully:', data);
-      // Dodaj tu przekierowanie lub inny sposób informowania użytkownika o sukcesie
+      onLogin(data); // Przekazanie danych użytkownika do funkcji onLogin
+        navigate('/menu');
+
     } else {
       console.error('Failed to login:', data.error);
       // Możesz również wyświetlić informację o błędzie

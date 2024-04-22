@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, {useState} from "react";
 import Navbar from "./components/Navbar";
 import { Route, Routes } from "react-router-dom";
 import { About } from "./components/pages/About";
@@ -11,8 +11,13 @@ import Footer from "./components/pages/Footer";
 import MainPageCard from "./components/pages/MainPageCard";
 import OrderFinished from "./components/pages/OrderFinished";
 import Orders from "./components/pages/Orders";
-
+import { useNavigate } from 'react-router-dom';
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Stan określający, czy użytkownik jest zalogowany
+  const [userData, setUserData] = useState({}); // Stan przechowujący dane zalogowanego użytkownika
+  const navigate = useNavigate();
+
+
   // Funkcja do ustawiania wartości pliku cookie
 function setCookie(cookieName, cookieValue, expirationDays) {
   var d = new Date();
@@ -47,19 +52,31 @@ if (sessionId == "") {
   setCookie("sessionId", sessionId, 30); // Ustawienie pliku cookie na 30 dni
 };
 
+  const handleLogin = async (userData) => {
+    // Tutaj możesz przekazać dane użytkownika
+    setIsLoggedIn(true);
+    setUserData(userData);
+  };
+  const handleLogout = async (userData) => {
+    // Tutaj możesz przekazać dane użytkownika
+    setIsLoggedIn(false);
+    setUserData({});
+    navigate('/main-page');
+  };
+
   return (
     <div className="App">
-      <Navbar />
+      <Navbar handleLogout={handleLogout} isLoggedIn={isLoggedIn} userData={userData} />
       
       <div className="container mx-auto ">
       <Routes>
         <Route path="/about" element={<About />}></Route>
-        <Route path="/menu" element={<Menu />}></Route>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/menu" element={<Menu isLoggedIn={isLoggedIn}/>}></Route>
+        <Route path="/login" element={<Login handleLogin={handleLogin} />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
        <Route path="/add-product" element={<AddProduct />}></Route>
         <Route path="/main-page" element={<MainPageCard />}></Route>
-        <Route path="/services" element={<OrderFinished />}></Route>
+        <Route path="/services" ></Route>
         <Route path="/orders" element={<Orders />}></Route>
       </Routes>
       

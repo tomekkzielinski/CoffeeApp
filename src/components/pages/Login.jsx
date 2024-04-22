@@ -1,10 +1,11 @@
 import React from 'react'
 import LoginForm from './LoginForm';
 
-const Login = () => {
+const Login = ({handleLogin}) => {
+
   return (
 <div>
-    <LoginForm />
+    <LoginForm onLogin={handleLogin}/>
 </div>
   )
 }

@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 
-const Product = ({ products, onDelete, handleAddToCart }) => {
+const Product = ({ products, onDelete, handleAddToCart, isLoggedIn }) => {
   return (
     <div className="gap-4 m-5 flex flex-wrap">
       {products.map((product) => (
         <div key={product.id} className="card w-96 bg-base-100 shadow-xl">
           <figure>
-            <img
-              src={product.image}
-              alt="Produkt"
-              className="max-h-96 w-max"
-            />  
+            <img src={product.image} alt="Produkt" className="max-h-96 w-max" />
           </figure>
           <div className="card-body">
             <h2 className="card-title text-xl font-bold">{product.name}</h2>
@@ -19,16 +15,19 @@ const Product = ({ products, onDelete, handleAddToCart }) => {
             <div className="card-actions justify-end">
               <button
                 className="btn bg-main-color"
-                onClick={() => handleAddToCart(product.id)}
+                onClick={() => handleAddToCart(product.id, product.category_id)}
               >
                 Kup teraz!
               </button>
-              <button
-                className="btn bg-main-color"
-                onClick={() => onDelete(product.id)}
-              >
-                Usuń
-              </button>
+
+              {isLoggedIn && (
+                <button
+                  className="btn bg-main-color"
+                  onClick={() => onDelete(product.id)}
+                >
+                  Usuń
+                </button>
+              )}
             </div>
           </div>
         </div>
