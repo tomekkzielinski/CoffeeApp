@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from flask_login import UserMixin
 
 Base = declarative_base()
 
@@ -51,9 +52,30 @@ class Order(Base):
     cart = relationship("Cart")
     product = relationship("Product")
 
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
+
+    # Metody wymagane przez Flask-Login
+    @property
+    def is_authenticated(self):
+        # Zwykle zwraca True, jeśli użytkownik dostarczył prawidłowe dane uwierzytelniające
+        return True
+
+    @property
+    def is_active(self):
+        # Zwykle zwraca True, o ile konto użytkownika jest aktywne, a nie zawieszone
+        return True
+
+    @property
+    def is_anonymous(self):
+        # Zwykle zwraca False - tylko dla specjalnych anonimowych użytkowników
+        return False
+
+    def get_id(self):
+        # Zwraca unikatowy identyfikator użytkownika, musi być unicode
+        return str(self.id)
+
     

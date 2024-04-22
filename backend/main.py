@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_cors import CORS
-from backend.models.models import Base, Product, Cart, Order  # Załóżmy, że wszystkie modele są zdefiniowane w tym module
+from backend.models.models import Base, Product, Cart, Order, User  # Załóżmy, że wszystkie modele są zdefiniowane w tym module
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -14,8 +14,8 @@ from functools import wraps
 
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Ustawiłem '*' dla origins, dla uproszczenia dostępu
-
+app.secret_key = 'dupadupadupa'  # To powinien być trudny do zgadnięcia ciąg znaków
+CORS(app, supports_credentials=True)
 
 # Konfiguracja silnika bazy danych SQLAlchemy
 engine = create_engine('sqlite:///coffeeapp.db', echo=True)
@@ -33,25 +33,20 @@ def generate_order_id():
     random_id = random.randint(100, 999)
     return random_id
 
-def set_password(password):
-    return generate_password_hash(password)
-
-def check_password(hashed_password, password):
-    return check_password_hash(hashed_password, password)
-
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-@app.route('/login', methods=['POST'])
+@app.route('/users', methods=['POST'])
 def login():
     username = request.form['username']
     password = request.form['password']
     session = get_session()
     user = session.query(User).filter_by(username=username).first()
-    if user and check_password(user.password_hash, password):
+    if user and user.password_hash == password:
         login_user(user)
         return jsonify({'message': 'Logged in successfully'}), 200
     return jsonify({'error': 'Invalid username or password'}), 401
+
 
 @app.route('/logout')
 @login_required
@@ -71,6 +66,43 @@ def admin_required(f):
             return jsonify({'error': 'Authorization required'}), 403
         return f(*args, **kwargs)
     return decorated_function
+
+
+@app.route('/users', methods=['GET'])
+def get_user():
+    username = request.args.get('username')
+    session = get_session()
+    user = session.query(User).filter_by(username=username).first()
+    if user:
+        return jsonify({'username': user.username}), 200
+    return jsonify({'error': 'User not found'}), 404
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Endpoint do dodawania produktów
 @app.route('/products', methods=['POST'])

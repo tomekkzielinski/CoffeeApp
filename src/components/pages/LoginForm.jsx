@@ -4,15 +4,34 @@ const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Tutaj możesz dodać logikę uwierzytelniania
-    console.log('Zalogowano:', { username, password });
+  
+    const response = await fetch('http://localhost:5000/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        username: username,
+        password: password
+      })
+    });
+  
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Logged in successfully:', data);
+      // Dodaj tu przekierowanie lub inny sposób informowania użytkownika o sukcesie
+    } else {
+      console.error('Failed to login:', data.error);
+      // Możesz również wyświetlić informację o błędzie
+    }
   };
+  
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className="bg-main-color  w-96 p-8 rounded shadow-md">
+    <div className="flex justify-center items-center h-screen">
+      <div className="bg-main-color w-96 p-8 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-4">Logowanie</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
@@ -43,7 +62,7 @@ const LoginForm = () => {
           </div>
           <button
             type="submit"
-            className="w-full  text-white p-2 rounded-md bg-buttons-color transition duration-300"
+            className="w-full text-white p-2 rounded-md bg-buttons-color transition duration-300"
           >
             Zaloguj
           </button>
