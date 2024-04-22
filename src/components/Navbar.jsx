@@ -30,7 +30,7 @@ const Navbar = ({ isLoggedIn,  handleLogout }) => {
  
   return (
     <nav>
-      <Link to="/main-page" className="title">
+      <Link to="/" className="title">
         <img src="../../coffee-logo-1.png" alt="Coffee-App Logo" />
       </Link>
 
@@ -53,9 +53,7 @@ const Navbar = ({ isLoggedIn,  handleLogout }) => {
         <li>
           <NavLink to="menu">Menu</NavLink>
         </li>
-        <li>
-          <NavLink to="services">Promocje</NavLink>
-        </li>
+
         <li>
           {isLoggedIn ? (
             <a onClick={handleLogout}>Wyloguj</a>

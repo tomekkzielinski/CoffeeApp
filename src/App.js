@@ -61,7 +61,7 @@ if (sessionId == "") {
     // Tutaj możesz przekazać dane użytkownika
     setIsLoggedIn(false);
     setUserData({});
-    navigate('/main-page');
+    navigate('/');
   };
 
   return (
@@ -75,8 +75,8 @@ if (sessionId == "") {
         <Route path="/login" element={<Login handleLogin={handleLogin} />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
        <Route path="/add-product" element={<AddProduct />}></Route>
-        <Route path="/main-page" element={<MainPageCard />}></Route>
-        <Route path="/services" ></Route>
+        <Route path="/" element={<MainPageCard />}></Route>
+        <Route path="/services" >{<OrderFinished />}</Route>
         <Route path="/orders" element={<Orders />}></Route>
       </Routes>
       
