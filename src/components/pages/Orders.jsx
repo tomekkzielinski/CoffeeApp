@@ -11,6 +11,7 @@ const Orders = () => {
         // Grupowanie zamówień po session_id
         const groupedOrders = groupOrdersBySessionId(response.data);
         setGroupedOrders(groupedOrders);
+        console.log(response.data)
       } catch (error) {
         console.error("Błąd podczas pobierania zamówień:", error);
       }
@@ -33,11 +34,14 @@ const Orders = () => {
       groupedOrders[sessionId].products.push({
         name: order.product_name,
         quantity: order.quantity,
+        milk: order.milk,
+        sugar: order.sugar
       });
       groupedOrders[sessionId].totalPrice += order.total_price;
     });
     return groupedOrders;
   };
+  
   const handleDelete = (session_id) => {
     console.log("Session ID to delete:", session_id); // Dodaj logowanie, aby sprawdzić przekazywaną wartość
 
@@ -68,14 +72,19 @@ const Orders = () => {
             className=" m-5 card w-96 bg-main-color text-font-color"
           >
             <div className="card-body">
-              <h2 className="card-title text-lg justify-center mb-10 font-bold">
+              <h2 className="card-title text-xl justify-center mb-10 font-bold">
                 Numer zamówienia: {sessionId}
               </h2>
               {products.map((product, index) => (
                 <div key={index}>
-                  <p>
-                    Product Name: {product.name} x {product.quantity}
+                  <p className="font-bold">
+                    {product.name} x {product.quantity}
                   </p>
+                  <p>
+                  Mleko roślinne: {product.milk ? "Tak" : "Nie" }
+                  <br/>
+                  Słodzik: {product.sugar ? "Tak" : "Nie"}
+                </p>
                 </div>
               ))}
               <p className="text-2xl font-bold mt-5">

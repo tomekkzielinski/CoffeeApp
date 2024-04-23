@@ -196,7 +196,9 @@ def get_cart_contents():
                 'product_description': product.description,
                 'product_price': product.price,
                 'product_image': product.image,
-                'category_id': product.category_id
+                'category_id': product.category_id,
+                'milk': item.milk,
+                'sugar': item.sugar
             })
         return jsonify(cart_data)
     finally:

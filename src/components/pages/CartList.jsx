@@ -78,6 +78,7 @@ const CartList = () => {
         const response = await axios.get("http://localhost:5000/cart");
         setProducts(response.data);
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
+        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -116,7 +117,8 @@ const CartList = () => {
             <th type="number" className="text-xl">
               Ilość
             </th>
-            <th></th>
+            <th className="text-xl">Mleko roś.</th>
+            <th className="text-xl">Słodzik</th>
           </tr>
         </thead>
         <tbody>
@@ -130,6 +132,8 @@ const CartList = () => {
               description={product.description}
               image={product.product_image}
               quantity={product.quantity}
+              sugar={product.sugar}
+              milk={product.milk}
             />
           ))}
         </tbody>
