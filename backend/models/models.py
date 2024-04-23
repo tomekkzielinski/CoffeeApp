@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
@@ -28,14 +28,12 @@ class Cart(Base):
     __tablename__ = 'cart'
     id = Column(Integer, primary_key=True)
     product_id = Column(Integer, ForeignKey('products.id'))
-    # user_id = Column(Integer, ForeignKey('users.id')) # Jeśli masz model User
     session_id = Column(String)
     quantity = Column(Integer, default=1)
-    # Można dodać więcej pól, np. status koszyka, datę dodania itp.
-
+    milk = Column(Boolean, default=False)  # New field for milk
+    sugar = Column(Boolean, default=False)  # New field for sugar
     # Relacje
     product = relationship("Product", back_populates="carts")
-    # user = relationship("User", back_populates="carts") # Jeśli masz model User
     
 Product.carts = relationship("Cart", back_populates="product")
 
@@ -47,6 +45,8 @@ class Order(Base):
     product_id = Column(Integer, ForeignKey('products.id'))
     quantity = Column(Integer)
     order_id = Column(String) 
+    milk = Column(Boolean, default=False)  # Dodane pole dla mleka
+    sugar = Column(Boolean, default=False)  # Dodane pole dla cukru
 
     # Relacje
     cart = relationship("Cart")

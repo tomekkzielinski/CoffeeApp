@@ -106,7 +106,6 @@ def get_user():
 
 # Endpoint do dodawania produktów
 @app.route('/products', methods=['POST'])
-@admin_required
 def add_product():
     session = get_session()
     try:
@@ -168,7 +167,9 @@ def add_to_cart():
         new_cart_item = Cart(
             product_id=data['product_id'],
             quantity=data['quantity'],
-            session_id=data['session_id']
+            session_id=data['session_id'],
+            milk=data.get('milk', False),  # Capture milk preference
+            sugar=data.get('sugar', False)  # Capture sugar preference
         )
         session.add(new_cart_item)
         session.commit()
@@ -235,13 +236,14 @@ def add_order():
 
         orders = []
         for cart_item in cart_items:
-            product = session.query(Product).filter_by(id=cart_item.product_id).first()
             new_order = Order(
                 order_id = format(generate_order_id()),
                 session_id=data['session_id'],
                 product_id=cart_item.product_id,
                 quantity=cart_item.quantity,
-                total_price=float(amount)
+                total_price=float(amount),
+                milk=cart_item.milk,
+                sugar=cart_item.sugar
                 
             )
             orders.append(new_order)
@@ -278,7 +280,9 @@ def get_orders():
                 'product_id': order.product_id,
                 'product_name': product_name,  # Dodajemy nazwę produktu
                 'quantity': order.quantity,
-                'total_price': order.total_price
+                'total_price': order.total_price,
+                'milk': order.milk,
+                'sugar': order.sugar
             }
             # Dodaj słownik do listy orders_data
             orders_data.append(order_data)

@@ -47,6 +47,8 @@ const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedPr
         product_id: selectedProductId,
         quantity: quantity,
         session_id: sessionId, // Dodaj identyfikator sesji do danych przesyłanych w zapytaniu POST
+        milk: answerMilk,
+        sugar: answerSugar
       });
       onClose(); // Zamknij modal
       setShowAlert(true); // Pokaż alert
