@@ -1,5 +1,5 @@
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -8,6 +8,8 @@ const OrderFinished = () => {
   const [products, setProducts] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
   const [amount, setAmount] = useState(0);
+  const location = useLocation();
+  const finalAmount = location.state?.amount ?? '0'; // użyj wartości z przekazanego stanu lub domyślnej wartości '0'
 
   function getCookie(cookieName) {
     var name = cookieName + "=";
@@ -116,7 +118,7 @@ const OrderFinished = () => {
       <h1 className="text-5xl font-bold">Dziękujemy za złożenie zamówienia!</h1>
       <p className="py-6 text-3xl ">Numer zamówienia: {session_id}</p>
       <p className="py-6 text-3xl ">Prosimy o podejście do kasy i opłacenie zamówienia</p>
-      <p className="py-6 text-3xl ">Do zapłaty: {amount}</p>
+      <p className="py-6 text-3xl ">Do zapłaty: {finalAmount}</p>
       <button onClick={() => redirect('/menu')} className="text-white btn h-20 w-100 bg-buttons-color">Powrót do MENU</button>
     </div>
   </div>

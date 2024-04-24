@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CartComponents from "./CartComponents";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+
 
 const CartList = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,7 @@ const CartList = () => {
   const [amount, setAmount] = useState(0);
   const [coupons, setCoupons] = useState([]);
   const [couponName, setCouponName] = useState(''); // stan dla nazwy kuponu
-
+  const navigate = useNavigate();
   // Funkcja do pobierania wartości pliku cookie po nazwie
   function getCookie(cookieName) {
     var name = cookieName + "=";
@@ -51,6 +52,7 @@ const CartList = () => {
           console.log("Zamówienie zostało dodane:", response.data);
           // Dodatkowy kod, który wykonasz po pomyślnym dodaniu zamówienia
           // ...
+          navigate('/order-finished', { state: { amount } });
         })
         .catch((error) => {
           console.error("Błąd podczas dodawania zamówienia:", error);
@@ -211,6 +213,7 @@ const CartList = () => {
         <Link to="/services" className="title">
           <button
             onClick={handleOrderSubmission}
+            
             className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-main-color hover:bg-buttons-color hover:text-white mb-20"
           >
             Zamów i zapłać przy kasie

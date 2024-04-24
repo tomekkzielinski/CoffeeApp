@@ -79,7 +79,7 @@ if (sessionId == "") {
         <Route path="/cart" element={<Cart />}></Route>
        <Route path="/add-product" element={<AddProduct />}></Route>
         <Route path="/" element={<MainPageCard />}></Route>
-        <Route path="/services" >{<OrderFinished />}</Route>
+        <Route path="/order-finished" element={<OrderFinished />} />
         <Route path="/orders" element={<Orders />}></Route>
         <Route path="/add-coupon" element={<Coupons />}></Route>
         <Route path="/tables" element={<Tables />}></Route>
