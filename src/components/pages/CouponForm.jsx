@@ -15,10 +15,34 @@ const CouponForm = () => {
     setCouponName(result);
   };
 
-  const handleAddCoupon = () => {
-    // Logic to add coupon goes here
-    console.log("Coupon Name:", couponName);
-    console.log("Discount Percentage:", discountPercentage);
+  const handleAddCoupon = async () => {
+    // Prepare data to be sent
+    const couponData = {
+      name: couponName,
+      discount_percent: parseFloat(discountPercentage),
+      is_active: true
+    };
+
+    try {
+      // Send a POST request to the backend
+      const response = await fetch("http://localhost:5000//coupons", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(couponData),
+      });
+
+      const responseData = await response.json();
+      if (response.ok) {
+        console.log('Coupon added successfully:', responseData);
+      } else {
+        console.error('Failed to add coupon:', responseData);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
     // Clear form fields after submission
     setCouponName("");
     setDiscountPercentage("");

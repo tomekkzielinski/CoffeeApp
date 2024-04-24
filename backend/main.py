@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_cors import CORS
-from backend.models.models import Base, Product, Cart, Order, User  # Załóżmy, że wszystkie modele są zdefiniowane w tym module
+from backend.models.models import Base, Product, Cart, Order, User, Coupon  # Załóżmy, że wszystkie modele są zdefiniowane w tym module
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -76,32 +76,6 @@ def get_user():
     if user:
         return jsonify({'username': user.username}), 200
     return jsonify({'error': 'User not found'}), 404
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Endpoint do dodawania produktów
@@ -315,6 +289,84 @@ def delete_orders_by_session(session_id):
         session.rollback()
        
        
+#Endpointy dal kuponów
+
+@app.route('/coupons', methods=['POST'])
+def add_coupon():
+    session = get_session()
+    try:
+        data = request.json
+        new_coupon = Coupon(
+            name=data['name'],
+            discount_percent=data['discount_percent'],
+            is_active=data['is_active']
+        )
+        session.add(new_coupon)
+        session.commit()
+        return jsonify({'message': 'Coupon added successfully!'}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 400
+    finally:
+        session.close()
+
+
+
+@app.route('/coupons', methods=['GET'])
+def get_coupons():
+    session = get_session()
+    try:
+        coupons = session.query(Coupon).all()
+        result = [
+            {
+                'id': coupon.id,
+                'name': coupon.name,
+                'discount_percent': coupon.discount_percent,
+                'is_active': coupon.is_active
+            } for coupon in coupons
+        ]
+        return jsonify(result)
+    finally:
+        session.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Endpoint powitalny
 @app.route('/')
 def hello():

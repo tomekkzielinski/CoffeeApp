@@ -78,4 +78,9 @@ class User(UserMixin, Base):
         # Zwraca unikatowy identyfikator użytkownika, musi być unicode
         return str(self.id)
 
-    
+class Coupon(Base):
+    __tablename__ = 'coupons'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)  # Nazwa kuponu
+    discount_percent = Column(Float, nullable=False)  # Procent zniżki
+    is_active = Column(Boolean, default=True)  # Czy kupon jest aktywny
