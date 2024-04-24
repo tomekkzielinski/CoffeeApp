@@ -36,6 +36,7 @@ const CouponForm = () => {
       const responseData = await response.json();
       if (response.ok) {
         console.log('Coupon added successfully:', responseData);
+        alert("Kupon został dodany");
       } else {
         console.error('Failed to add coupon:', responseData);
       }

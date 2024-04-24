@@ -18,7 +18,6 @@ const Navbar = ({ isLoggedIn,  handleLogout }) => {
         const response = await axios.get("http://localhost:5000/cart");
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
         var cartItems = response.data;
-        console.log("test-nav", cartItems);
       } catch (error) {
         console.error(error);
       }

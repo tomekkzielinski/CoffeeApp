@@ -11,7 +11,7 @@ import Footer from "./components/pages/Footer";
 import MainPageCard from "./components/pages/MainPageCard";
 import OrderFinished from "./components/pages/OrderFinished";
 import Orders from "./components/pages/Orders";
-import CouponForm from "./components/pages/CouponForm";
+import Coupons from "./components/pages/Coupons";
 import Tables from "./components/pages/Tables";
 
 import { useNavigate } from 'react-router-dom';
@@ -81,7 +81,7 @@ if (sessionId == "") {
         <Route path="/" element={<MainPageCard />}></Route>
         <Route path="/services" >{<OrderFinished />}</Route>
         <Route path="/orders" element={<Orders />}></Route>
-        <Route path="/add-coupon" element={<CouponForm />}></Route>
+        <Route path="/add-coupon" element={<Coupons />}></Route>
         <Route path="/tables" element={<Tables />}></Route>
       </Routes>
       
