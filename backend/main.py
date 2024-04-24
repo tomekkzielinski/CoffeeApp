@@ -329,6 +329,23 @@ def get_coupons():
     finally:
         session.close()
 
+@app.route('/coupons/<int:coupon_id>', methods=['PATCH'])
+def update_coupon(coupon_id):
+    session = get_session()
+    try:
+        coupon = session.query(Coupon).filter_by(id=coupon_id).first()
+        if coupon:
+            is_active = request.json.get('is_active')
+            coupon.is_active = is_active
+            session.commit()
+            return jsonify({'message': 'Coupon updated successfully!'}), 200
+        else:
+            return jsonify({'error': 'Coupon not found'}), 404
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
 
 
 

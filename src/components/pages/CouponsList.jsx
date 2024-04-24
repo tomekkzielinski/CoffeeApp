@@ -18,6 +18,22 @@ const CouponsList = () => {
     fetchCoupons(); // Wywołanie funkcji pobierającej kody kuponów
   }, []); // Efekt wywoływany tylko raz po pierwszym renderowaniu komponentu
 
+  const handleToggle = async (couponId, isActive) => {
+    try {
+      const response = await axios.patch(`http://localhost:5000/coupons/${couponId}`, {
+        is_active: !isActive
+      });
+      if (response.status === 200) {
+        // Aktualizacja stanu lokalnego, aby odzwierciedlić zmianę na UI
+        setCoupons(coupons.map(coupon => coupon.id === couponId ? { ...coupon, is_active: !coupon.is_active } : coupon));
+      }
+    } catch (error) {
+      console.error("Błąd aktualizacji kuponu:", error);
+    }
+  };
+
+
+
   return (
     <div className="overflow-x-auto">
       <table className="table">
@@ -51,7 +67,7 @@ const CouponsList = () => {
               <td>
                 <div className="form-control">
                   <label className="label cursor-pointer">
-                    <input type="checkbox" className="toggle" defaultChecked={coupon.is_active} />
+                   <input type="checkbox" className="toggle" checked={coupon.is_active} onChange={() => handleToggle(coupon.id, coupon.is_active)} />
                   </label>
                 </div>
               </td>
