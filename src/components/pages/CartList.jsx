@@ -7,6 +7,8 @@ const CartList = () => {
   const [products, setProducts] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
   const [amount, setAmount] = useState(0);
+  const [coupons, setCoupons] = useState([]);
+  const [couponName, setCouponName] = useState(''); // stan dla nazwy kuponu
 
   // Funkcja do pobierania wartości pliku cookie po nazwie
   function getCookie(cookieName) {
@@ -63,9 +65,11 @@ const CartList = () => {
   }
   const removeFromCart = async (cartId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/cart/${cartId}`);
+      const response = await axios.delete(
+        `http://localhost:5000/cart/${cartId}`
+      );
       setCartProducts((prev) =>
-        prev.filter((product) => (product.cart_id !== cartId))
+        prev.filter((product) => product.cart_id !== cartId)
       );
     } catch (error) {
       console.error("There was an error removing the cart item!", error);
@@ -78,7 +82,7 @@ const CartList = () => {
         const response = await axios.get("http://localhost:5000/cart");
         setProducts(response.data);
         setCartProducts(response.data); // Ustawienie stanu cartProducts na podstawie danych pobranych z serwera
-        console.log(response.data);
+      
       } catch (error) {
         console.error(error);
       }
@@ -98,6 +102,55 @@ const CartList = () => {
       setAmount(0);
     }
   }, [cartProducts]);
+
+  useEffect(() => {
+    // Pobranie listy kuponów po załadowaniu komponentu
+    const fetchCoupons = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/coupons"); // Endpoint z backendu
+        setCoupons(response.data); // Ustawienie pobranych kuponów w stanie komponentu
+        console.log(response.data);
+      } catch (error) {
+        console.error("Błąd pobierania kuponów:", error);
+      }
+    };
+
+    fetchCoupons(); // Wywołanie funkcji pobierającej kody kuponów
+  }, []); // Efekt wywoływany tylko raz po pierwszym renderowaniu komponentu
+
+  const handleCouponAdding = async () => {
+    if (!couponName) {
+      console.log("Proszę wpisać nazwę kuponu.");
+      return;
+    }
+  
+    try {
+      const response = await axios.get(`http://localhost:5000/coupons/${couponName}`);
+      if (response.status === 200) {
+        const coupon = response.data;
+        if (coupon.is_active) {
+          console.log('Kupon jest aktywny, można go zastosować.');
+          // Oblicz nową kwotę po zastosowaniu zniżki
+          const discount = coupon.discount_percent / 100;
+          const newAmount = amount - (amount * discount);
+          setAmount(newAmount.toFixed(2)); // Aktualizacja stanu kwoty z zaokrągleniem do dwóch miejsc po przecinku
+          console.log(`Zastosowano kupon: nowa kwota to ${newAmount.toFixed(2)}`);
+         
+        } else {
+          console.log("Kupon nie jest aktywny.");
+        }
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.error("Kupon nie istnieje.");
+      } else {
+        console.error("Błąd przy sprawdzaniu kuponu:", error);
+      }
+    }
+  };
+  
+  // Przykład użycia funkcji
+  // handleCouponAdding(123, () => console.log('Kupon aktywny, dodajemy produkt do koszyka'));
 
   return (
     <div className="text-xl">
@@ -138,7 +191,20 @@ const CartList = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end font-bold items-center mx-auto mt-20">
+
+      <div className="flex justify-end mt-10">
+        
+        <input
+          type="text"
+          value={couponName}
+          onChange={e => setCouponName(e.target.value)}
+          placeholder="Wprowadź kod rabatowy:"
+          className="input input-bordered input-success max-w-xs"
+        />
+        <button onClick={handleCouponAdding} className="btn ml-5 bg-buttons-color text-white">Dodaj kupon</button>
+      </div>
+
+      <div className="flex justify-end font-bold items-center mx-auto mt-5">
         Suma: {amount}
       </div>
       <div className="flex justify-center items-center mx-auto mt-20">
