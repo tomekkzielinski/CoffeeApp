@@ -43,10 +43,16 @@ const Navbar = ({ isLoggedIn,  handleLogout }) => {
         {isLoggedIn && (
           <>
             <li>
+              <NavLink to="tables">Stoliki</NavLink>
+            </li>
+            <li>
               <NavLink to="orders">Zamówienia</NavLink>
             </li>
             <li>
               <NavLink to="add-product">Dodaj produkt</NavLink>
+            </li>
+            <li>
+              <NavLink to="add-coupon">Dodaj kupon</NavLink>
             </li>
           </>
         )}

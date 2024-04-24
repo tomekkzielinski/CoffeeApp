@@ -11,6 +11,9 @@ import Footer from "./components/pages/Footer";
 import MainPageCard from "./components/pages/MainPageCard";
 import OrderFinished from "./components/pages/OrderFinished";
 import Orders from "./components/pages/Orders";
+import CouponForm from "./components/pages/CouponForm";
+import Tables from "./components/pages/Tables";
+
 import { useNavigate } from 'react-router-dom';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Stan określający, czy użytkownik jest zalogowany
@@ -78,6 +81,8 @@ if (sessionId == "") {
         <Route path="/" element={<MainPageCard />}></Route>
         <Route path="/services" >{<OrderFinished />}</Route>
         <Route path="/orders" element={<Orders />}></Route>
+        <Route path="/add-coupon" element={<CouponForm />}></Route>
+        <Route path="/tables" element={<Tables />}></Route>
       </Routes>
       
       </div>
