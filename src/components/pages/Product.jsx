@@ -27,6 +27,18 @@ const Product = ({ products, onDelete, handleAddToCart, isLoggedIn }) => {
                 >
                   Usuń
                 </button>
+                
+                
+              )}
+                {isLoggedIn && (
+                <button
+                  className="btn bg-main-color"
+                  onClick={() => onDelete(product.id)}
+                >
+                  Edytuj
+                </button>
+                
+                
               )}
             </div>
           </div>

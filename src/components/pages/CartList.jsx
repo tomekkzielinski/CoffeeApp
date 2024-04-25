@@ -10,7 +10,10 @@ const CartList = () => {
   const [amount, setAmount] = useState(0);
   const [coupons, setCoupons] = useState([]);
   const [couponName, setCouponName] = useState(''); // stan dla nazwy kuponu
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
+
+
   // Funkcja do pobierania wartości pliku cookie po nazwie
   function getCookie(cookieName) {
     var name = cookieName + "=";
@@ -25,9 +28,10 @@ const CartList = () => {
         return cookie.substring(name.length, cookie.length);
       }
     }
+  
     return "";
   }
-
+  
   function cartNotEmpty(amount) {
     // Sprawdzamy, czy wartość amount (całkowita cena zamówienia) jest większa od zera
     if (amount > 0) {
@@ -122,7 +126,8 @@ const CartList = () => {
 
   const handleCouponAdding = async () => {
     if (!couponName) {
-      console.log("Proszę wpisać nazwę kuponu.");
+      alert("Proszę podać nazwę kuponu.");
+      setIsButtonDisabled(true); // Przywróć aktywność przycisku
       return;
     }
   
@@ -131,7 +136,7 @@ const CartList = () => {
       if (response.status === 200) {
         const coupon = response.data;
         if (coupon.is_active) {
-          console.log('Kupon jest aktywny, można go zastosować.');
+          alert('Kupon jest aktywny');
           // Oblicz nową kwotę po zastosowaniu zniżki
           const discount = coupon.discount_percent / 100;
           const newAmount = amount - (amount * discount);
@@ -139,20 +144,20 @@ const CartList = () => {
           console.log(`Zastosowano kupon: nowa kwota to ${newAmount.toFixed(2)}`);
          
         } else {
-          console.log("Kupon nie jest aktywny.");
+          alert("Kupon nie jest aktywny.");
         }
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        console.error("Kupon nie istnieje.");
+        alert("Kupon nie istnieje.");
       } else {
         console.error("Błąd przy sprawdzaniu kuponu:", error);
       }
     }
+    setIsButtonDisabled(true); // Przywróć aktywność przycisku
   };
   
-  // Przykład użycia funkcji
-  // handleCouponAdding(123, () => console.log('Kupon aktywny, dodajemy produkt do koszyka'));
+ 
 
   return (
     <div className="text-xl">
@@ -203,7 +208,7 @@ const CartList = () => {
           placeholder="Wprowadź kod rabatowy:"
           className="input input-bordered input-success max-w-xs"
         />
-        <button onClick={handleCouponAdding} className="btn ml-5 bg-buttons-color text-white">Dodaj kupon</button>
+        <button onClick={handleCouponAdding} disabled={isButtonDisabled} className="btn ml-5 bg-buttons-color text-white">Dodaj kupon</button>
       </div>
 
       <div className="flex justify-end font-bold items-center mx-auto mt-5">

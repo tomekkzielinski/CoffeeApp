@@ -88,7 +88,7 @@ const Orders = () => {
                 </div>
               ))}
               <p className="text-2xl font-bold mt-5">
-                Kwota zam.: {totalPrice} PLN
+                Kwota zam.: {totalPrice.toFixed(2)} PLN 
               </p>
               <div className="grid justify-items-end">
                 <button

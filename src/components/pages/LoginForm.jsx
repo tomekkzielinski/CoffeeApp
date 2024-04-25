@@ -26,7 +26,7 @@ const LoginForm = ( {onLogin}) => {
         navigate('/menu');
 
     } else {
-      console.error('Failed to login:', data.error);
+      alert('Failed to login:', data.error);
       // Możesz również wyświetlić informację o błędzie
     }
   };
