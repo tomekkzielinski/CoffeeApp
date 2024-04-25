@@ -13,7 +13,7 @@ import OrderFinished from "./components/pages/OrderFinished";
 import Orders from "./components/pages/Orders";
 import Coupons from "./components/pages/Coupons";
 import Tables from "./components/pages/Tables";
-
+import EditProduct from "./components/pages/EditProduct";
 import { useNavigate } from 'react-router-dom';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Stan określający, czy użytkownik jest zalogowany
@@ -83,6 +83,7 @@ if (sessionId == "") {
         <Route path="/orders" element={<Orders />}></Route>
         <Route path="/add-coupon" element={<Coupons />}></Route>
         <Route path="/tables" element={<Tables />}></Route>
+        <Route path="/edit-product" element={<EditProduct />}></Route>
       </Routes>
       
       </div>

@@ -117,6 +117,30 @@ def get_products():
     finally:
         session.close()
 
+@app.route('/products/<int:id>', methods=['GET'])
+def get_product(id):
+    session = get_session()
+    try:
+        # Znajdź produkt po ID
+        product = session.query(Product).filter_by(id=id).first()
+        if not product:
+            return jsonify({'message': 'Product not found'}), 404
+
+        # Zwróć dane produktu
+        product_data = {
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'image': product.image,
+            'category_id': product.category_id
+        }
+        return jsonify(product_data), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close
+
 # Endpoint do usuwania produktu
 @app.route('/products/<int:id>', methods=['DELETE'])
 def delete_product(id):
@@ -131,6 +155,40 @@ def delete_product(id):
             return jsonify({'message': 'Product not found'}), 404
     finally:
         session.close()
+
+#  Endpoint do edycji produktu
+@app.route('/products/<int:id>', methods=['PATCH'])
+def update_product(id):
+    session = get_session()  # Uzyskaj sesję z SQLAlchemy
+    try:
+        # Znajdź produkt po ID
+        product = session.query(Product).filter_by(id=id).first()
+        if product is None:
+            return jsonify({'message': 'Product not found'}), 404
+
+        data = request.get_json()
+        # Aktualizuj pola produktu na podstawie przesłanych danych
+        if 'name' in data:
+            product.name = data['name']
+        if 'description' in data:
+            product.description = data['description']
+        if 'price' in data:
+            product.price = float(data['price'])
+        if 'image' in data:
+            product.image = data['image']
+        if 'category_id' in data:
+            product.category_id = data['category_id']
+
+        session.commit()  # Zapisz zmiany w bazie danych
+        return jsonify({'message': 'Product updated successfully'}), 200
+
+    except Exception as e:
+        session.rollback()  # Wycofaj zmiany w przypadku błędu
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()  # Zawsze zamknij sesję po zakończeniu
+
+
 
 # Endpoint do dodawania produktów do koszyka
 @app.route('/cart', methods=['POST'])

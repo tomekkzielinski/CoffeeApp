@@ -1,6 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";  
 
 const Product = ({ products, onDelete, handleAddToCart, isLoggedIn }) => {
+
+  const navigate = useNavigate();
+
+  const handleEditClick = async (id) => {
+    try {
+        const response = await axios.get(`http://localhost:5000/products/${id}`);
+        // Przekazanie danych produktu do formularza edycji oraz przekierowanie z danymi produktu
+        navigate('/edit-product', { state: { product: response.data } });
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+    }
+};
   return (
     <div className="gap-4 m-5 flex flex-wrap">
       {products.map((product) => (
@@ -33,7 +47,8 @@ const Product = ({ products, onDelete, handleAddToCart, isLoggedIn }) => {
                 {isLoggedIn && (
                 <button
                   className="btn bg-main-color"
-                  onClick={() => onDelete(product.id)}
+                  onClick={() => handleEditClick(product.id)}
+                  
                 >
                   Edytuj
                 </button>
