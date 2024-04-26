@@ -1,15 +1,14 @@
-// Komponent AddToCartModal.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Alert from "./Alert";
 
 const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedProduct }) => {
   const [quantity, setQuantity] = useState(1);
-  const [showAlert, setShowAlert] = useState(false); // Dodanie stanu dla alertu
+  const [showAlert, setShowAlert] = useState(false);
   const [answerMilk, setAnswerMilk] = useState(undefined);
   const [answerSugar, setAnswerSugar] = useState(false);
 
-  // Zaktualizowana funkcja onClose, która teraz czeka na ukrycie alertu
+  // onClose, która teraz czeka na ukrycie alertu
   const onClose = () => {
     setShowAlert(true); // Najpierw pokazujemy alert
     resetSelectedProduct();
@@ -50,8 +49,8 @@ const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedPr
         milk: answerMilk,
         sugar: answerSugar
       });
-      onClose(); // Zamknij modal
-      setShowAlert(true); // Pokaż alert
+      onClose(); // Funkcja wywołująca zamknięcie modala
+      setShowAlert(true); 
     } catch (error) {
       console.error("Błąd przy dodawaniu produktu do koszyka:", error);
     }
@@ -64,7 +63,7 @@ const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedPr
     setAnswerMilk(value);
   }
   function handleTheAnswerChangeSugar(e) {
-    const value = e.target.value === "true"; // Konwertuj wartość na boolean
+    const value = e.target.value === "true"; 
     console.log("sugar", value);
     setAnswerSugar(value);
   }
@@ -89,7 +88,7 @@ const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedPr
           {selectedCategoryId === 1 && (
             <div>
               <div>
-                <label className="block mt-5 mb-3 font-bold">Mleko</label>
+                <label className="block mt-5 mb-3 font-bold">Mleko roślinne</label>
                 <div>
                   <div className="flex items-center">
                     <input
@@ -124,7 +123,7 @@ const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedPr
               </div>
 
               <div>
-                <label className="block mt-5 mb-3 font-bold">Cukier</label>
+                <label className="block mt-5 mb-3 font-bold">Słodzik</label>
                 <div>
                   <div className="flex items-center">
                     <input
@@ -169,7 +168,7 @@ const AddToCartModal = ({ selectedProductId, selectedCategoryId, resetSelectedPr
             Dodaj do koszyka
           </button>
           <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
+           
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>

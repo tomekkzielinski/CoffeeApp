@@ -1,4 +1,3 @@
-// Komponent Alert.js
 import React, { useEffect } from "react";
 
 const Alert = ({ show, onHide }) => {

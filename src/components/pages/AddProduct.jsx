@@ -1,18 +1,21 @@
+// Import React i useState z biblioteki react oraz axios do obsługi żądań HTTP
 import React, { useState } from "react";
 import axios from "axios";
 
-
+// Komponent AddProduct służy do dodawania nowych produktów
 function AddProduct({ onAddProduct }) {
+  // Definicja stanów lokalnych dla nazwy, zdjęcia, kategorii, ceny i opisu produktu
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
 
-
+  // Funkcja obsługująca dodawanie produktu
   const handleAddProduct = () => {
-    // Sprawdzamy, czy wszystkie pola są uzupełnione przed dodaniem produktu
+    // Sprawdzamy, czy wszystkie pola formularza są wypełnione przed dodaniem produktu
     if (name && image && category && price && description) {
+      // Tworzymy obiekt nowego produktu na podstawie wprowadzonych danych
       const newProduct = {
         name,
         image,
@@ -21,30 +24,32 @@ function AddProduct({ onAddProduct }) {
         description,
       };
 
-
- // Wysyłasz żądanie POST do swojego backendu za pomocą Axios
-      axios.post("http://localhost:5000/products", newProduct)
-        .then(response => {
-          // Po dodaniu produktu do bazy danych, wywołujesz funkcję callback onAddProduct
+      // Wysyłamy żądanie POST dodające nowy produkt do bazy danych
+      axios
+        .post("http://localhost:5000/products", newProduct)
+        .then((response) => {
+          // Po dodaniu produktu do bazy danych, wywołujemy funkcję callback onAddProduct
           onAddProduct(newProduct);
-          // Czyszczyszenie pola formularza
+          // Czyszczenie pól formularza za pomocą funkcji useState
           setName("");
           setImage("");
           setCategory("");
           setPrice("");
           setDescription("");
+          // Wyświetlamy alert informujący o dodaniu produktu
           alert("Produkt został dodany!");
         })
-        .catch(error => {
-            alert("Produkt został pomyślnie dodany!")
+        .catch((error) => {
+          // W przypadku wystąpienia błędu wyświetlamy alert z informacją
+          alert("Wystąpił błąd podczas dodawania produktu!");
         });
     } else {
+      // Jeśli nie wszystkie pola są wypełnione, wyświetlamy alert z prośbą o uzupełnienie wszystkich pól
       alert("Proszę wypełnić wszystkie pola.");
     }
   };
 
- 
-
+  // Renderowanie interfejsu użytkownika
   return (
     <div className="flex justify-center items-center bg-main-color  m-20 max-w-4xl mx-auto p-4 rounded-lg shadow-md">
       <div className="text-center">
@@ -100,4 +105,5 @@ function AddProduct({ onAddProduct }) {
   );
 }
 
+// Eksportowanie komponentu AddProduct
 export default AddProduct;

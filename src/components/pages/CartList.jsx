@@ -113,7 +113,7 @@ const CartList = () => {
     // Pobranie listy kuponów po załadowaniu komponentu
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/coupons"); // Endpoint z backendu
+        const response = await axios.get("http://localhost:5000/coupons"); 
         setCoupons(response.data); // Ustawienie pobranych kuponów w stanie komponentu
         console.log(response.data);
       } catch (error) {
@@ -121,8 +121,8 @@ const CartList = () => {
       }
     };
 
-    fetchCoupons(); // Wywołanie funkcji pobierającej kody kuponów
-  }, []); // Efekt wywoływany tylko raz po pierwszym renderowaniu komponentu
+    fetchCoupons(); 
+  }, []); 
 
   const handleCouponAdding = async () => {
     if (!couponName) {
@@ -137,7 +137,7 @@ const CartList = () => {
         const coupon = response.data;
         if (coupon.is_active) {
           alert('Kupon jest aktywny');
-          // Oblicz nową kwotę po zastosowaniu zniżki
+          // Mechanizm obliczania nowej kwoty po dodaniu kodu rabatowego na froncie.
           const discount = coupon.discount_percent / 100;
           const newAmount = amount - (amount * discount);
           setAmount(newAmount.toFixed(2)); // Aktualizacja stanu kwoty z zaokrągleniem do dwóch miejsc po przecinku

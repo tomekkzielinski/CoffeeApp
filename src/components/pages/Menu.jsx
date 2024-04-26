@@ -77,11 +77,13 @@ const Menu = ({isLoggedIn}) => {
           products={products.filter((product) => product.category_id === 1)}
           onDelete={handleDelete}
           handleAddToCart={handleAddToCartModal}
+          
         />
       </div>
       <p className="text-4xl font-bold ml-4 mt-6">Przekąski:</p>
       <div className="flex justify-center items-center">
         <Product
+          isLoggedIn={isLoggedIn}
           products={products.filter((product) => product.category_id === 2)}
           onDelete={handleDelete}
           handleAddToCart={handleAddToCartModal}
