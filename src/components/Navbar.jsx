@@ -24,8 +24,10 @@ const Navbar = ({ isLoggedIn,  handleLogout }) => {
     };
 
     fetchCartProducts();
-  }, []);
+  }, [cartProducts]);
 
+
+  
  
   return (
     <nav>
